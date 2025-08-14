@@ -12,9 +12,9 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["coparentsap/source/*"]
+      "@/*": ["source/*"]
     }
   },
-  "include": ["coparentsap/source", "vite.config.ts"],
+  "include": ["source", "vite.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
