@@ -7,7 +7,7 @@ export default defineConfig({
   build: { outDir: 'dist' },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'coparentsap/source'),
+      '@': path.resolve(__dirname, 'source'),
     },
   },
 })
