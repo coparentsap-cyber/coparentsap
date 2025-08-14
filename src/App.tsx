@@ -1,12 +1,10 @@
 import React from 'react'
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <h1>Bienvenue sur Co-Parents App</h1>
-      <p>Votre application pour gérer la garde de vos enfants sereinement.</p>
+    <div style={{ maxWidth: 420, margin: '80px auto', fontFamily: 'system-ui, sans-serif' }}>
+      <h1>Co-Parents</h1>
+      <p>Déploiement Netlify + Vite OK ✅</p>
     </div>
   )
 }
-
-export default App
