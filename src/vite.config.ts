@@ -1,1 +1,2 @@
-resolve: { alias: { '@': require('path').resolve(__dirname, 'source') } }
+resolve: { alias: { '@': require('path').resolve(__dirname, 'src') } }
+
