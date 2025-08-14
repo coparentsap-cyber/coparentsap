@@ -1,26 +1,21 @@
-# --- Build & publish ---
 [build]
   command = "npm ci && npm run build"
   publish = "dist"
 
-# --- Environnement de build ---
 [build.environment]
   NODE_VERSION = "20.11.1"
   NPM_FLAGS = "--no-audit --no-fund"
 
-# --- Dev local (Netlify CLI) ---
 [dev]
   framework = "vite"
   command = "npm run dev"
   port = 5173
 
-# --- Redirections SPA (évite 404 au refresh sur /route) ---
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# --- Caching conseillé pour assets (optionnel) ---
 [[headers]]
   for = "/assets/*"
   [headers.values]
