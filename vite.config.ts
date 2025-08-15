@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './', // important pour que les assets JS/CSS se chargent sur Netlify
+  base: './', // important pour que les chemins JS/CSS fonctionnent sur Netlify
 })
