@@ -7,3 +7,4 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;backgr
 .container{width:min(960px,92vw);margin:24px auto}
 a{color:var(--primary);text-decoration:none}
 a:hover{text-decoration:underline}
+
