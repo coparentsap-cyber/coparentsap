@@ -1,71 +1,50 @@
-/* ===== Styles Globaux ===== */
+/* src/App.css */
+
+/* Style global de la page */
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f8f9fb;
+  background-color: #f9f9f9;
   color: #333;
 }
 
+/* Conteneur principal */
+div {
+  padding: 16px;
+}
+
+/* Titres */
 h1 {
-  color: #2b6777;
-  text-align: center;
-  margin-bottom: 20px;
+  color: #222;
+  font-size: 1.8rem;
 }
 
-p {
-  color: #555;
-  line-height: 1.5;
-  text-align: center;
+h2 {
+  color: #444;
+  font-size: 1.4rem;
 }
 
-/* ===== Container Principal ===== */
-.app-container {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+/* Liens */
+a {
+  color: #007BFF;
+  text-decoration: none;
 }
 
-/* ===== Formulaire d'auth ===== */
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+a:hover {
+  text-decoration: underline;
 }
 
-.auth-form input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.auth-form button {
-  background-color: #52ab98;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.auth-form button:hover {
-  background-color: #469c89;
-}
-
-/* ===== Bouton Déconnexion ===== */
-.logout-btn {
-  background-color: #ff6b6b;
+/* Boutons */
+button {
   padding: 8px 12px;
+  background-color: #007BFF;
   border: none;
-  border-radius: 6px;
   color: white;
   cursor: pointer;
+  border-radius: 4px;
 }
 
-.logout-btn:hover {
-  background-color: #e05858;
+button:hover {
+  background-color: #0056b3;
 }
