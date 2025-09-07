@@ -1,14 +1,14 @@
-import { Link, useLocation } from "react-router-dom"
-import { motion, AnimatePresence } from "framer-motion"
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SideMenuProps {
-  isOpen: boolean
-  onClose: () => void
-  onNavigate: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  onNavigate: () => void;
 }
 
 export default function SideMenu({ isOpen, onClose, onNavigate }: SideMenuProps) {
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
 
   const links = [
     { to: "/", label: "Accueil", icon: "🏠" },
@@ -27,7 +27,7 @@ export default function SideMenu({ isOpen, onClose, onNavigate }: SideMenuProps)
     { to: "/settings", label: "Paramètres", icon: "⚙️" },
     { to: "/help", label: "Aide", icon: "❓" },
     { to: "/contact", label: "Contact", icon: "📞" },
-  ]
+  ];
 
   return (
     <AnimatePresence>
@@ -63,5 +63,5 @@ export default function SideMenu({ isOpen, onClose, onNavigate }: SideMenuProps)
         </motion.aside>
       )}
     </AnimatePresence>
-  )
+  );
 }

@@ -1,5 +1,5 @@
 interface HeaderProps {
-  onOpenMenu: () => void
+  onOpenMenu: () => void;
 }
 
 export default function Header({ onOpenMenu }: HeaderProps) {
@@ -10,5 +10,5 @@ export default function Header({ onOpenMenu }: HeaderProps) {
         ☰
       </button>
     </header>
-  )
+  );
 }

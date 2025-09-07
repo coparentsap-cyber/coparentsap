@@ -1,101 +1,101 @@
-import React, { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { UserPlus, Check, X, Mail, Copy, Users, Clock } from "lucide-react"
-import { useAuth } from "../../contexts/AuthContext"
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { UserPlus, Check, X, Mail, Copy, Users, Clock } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 const ConnectCoParent: React.FC = () => {
-  const { user, profile, connectCoParent } = useAuth()
-  const [inviteCode, setInviteCode] = useState("")
-  const [inviteEmail, setInviteEmail] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [isInviting, setIsInviting] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [inviteSuccess, setInviteSuccess] = useState(false)
-  const [sentInvitations, setSentInvitations] = useState<any[]>([])
-  const [connectedCoParents, setConnectedCoParents] = useState<any[]>([])
+  const { user, profile, connectCoParent } = useAuth();
+  const [inviteCode, setInviteCode] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInviting, setIsInviting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [inviteSuccess, setInviteSuccess] = useState(false);
+  const [sentInvitations, setSentInvitations] = useState<any[]>([]);
+  const [connectedCoParents, setConnectedCoParents] = useState<any[]>([]);
 
   useEffect(() => {
     if (user) {
-      loadSentInvitations()
-      loadConnectedCoParents()
+      loadSentInvitations();
+      loadConnectedCoParents();
     }
-  }, [user])
+  }, [user]);
 
   const loadSentInvitations = async () => {
-    if (!user) return
+    if (!user) return;
 
     try {
       // Charger depuis localStorage en mode démo
-      const saved = localStorage.getItem(`invites_${user.id}`)
+      const saved = localStorage.getItem(`invites_${user.id}`);
       if (saved) {
-        setSentInvitations(JSON.parse(saved))
+        setSentInvitations(JSON.parse(saved));
       }
     } catch (error) {
-      console.error("Erreur chargement invitations:", error)
+      console.error("Erreur chargement invitations:", error);
     }
-  }
+  };
 
   const loadConnectedCoParents = async () => {
-    if (!user) return
+    if (!user) return;
 
     try {
       // Charger depuis localStorage en mode démo
-      const saved = localStorage.getItem(`connected_coparents_${user.id}`)
+      const saved = localStorage.getItem(`connected_coparents_${user.id}`);
       if (saved) {
-        setConnectedCoParents(JSON.parse(saved))
+        setConnectedCoParents(JSON.parse(saved));
       }
     } catch (error) {
-      console.error("Erreur chargement co-parents:", error)
+      console.error("Erreur chargement co-parents:", error);
     }
-  }
+  };
 
   const handleConnect = async () => {
-    if (!user || !inviteCode.trim()) return
+    if (!user || !inviteCode.trim()) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await connectCoParent(inviteCode.trim())
+      await connectCoParent(inviteCode.trim());
 
-      setSuccess(true)
+      setSuccess(true);
       setTimeout(() => {
-        setSuccess(false)
-        setInviteCode("")
-        loadConnectedCoParents()
-      }, 3000)
+        setSuccess(false);
+        setInviteCode("");
+        loadConnectedCoParents();
+      }, 3000);
     } catch (error: any) {
-      console.error("Erreur lors de la connexion:", error)
-      alert(`❌ ${error.message}`)
+      console.error("Erreur lors de la connexion:", error);
+      alert(`❌ ${error.message}`);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleInvite = async () => {
-    if (!user || !profile) return
+    if (!user || !profile) return;
 
-    const emailToInvite = inviteEmail.trim()
+    const emailToInvite = inviteEmail.trim();
 
-    if (!emailToInvite) return
+    if (!emailToInvite) return;
 
-    setIsInviting(true)
+    setIsInviting(true);
     try {
-      const inviteCode = profile.invite_code || `CP-${user.id.slice(-8).toUpperCase()}`
+      const inviteCode = profile.invite_code || `CP-${user.id.slice(-8).toUpperCase()}`;
 
-      console.log("📧 ENVOI INVITATION AVEC RETRY...")
+      console.log("📧 ENVOI INVITATION AVEC RETRY...");
 
       // Utiliser le service de retry pour plus de robustesse
-      const { emailRetryService } = await import("../../lib/email-retry-service")
+      const { emailRetryService } = await import("../../lib/email-retry-service");
       const result = await emailRetryService.sendEmailWithRetry(
         "invitation",
         emailToInvite,
         profile.full_name || user.email || "Votre co-parent",
         inviteCode
-      )
+      );
 
-      console.log("📊 RÉSULTAT INVITATION:", result)
+      console.log("📊 RÉSULTAT INVITATION:", result);
 
       if (result.success) {
-        console.log(`✅ INVITATION ENVOYÉE après ${result.attempts} tentative(s)`)
+        console.log(`✅ INVITATION ENVOYÉE après ${result.attempts} tentative(s)`);
 
         // Sauvegarder l'invitation en localStorage pour la démo
         const newInvitation = {
@@ -106,14 +106,14 @@ const ConnectCoParent: React.FC = () => {
           status: "sent",
           sent_at: new Date().toISOString(),
           expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        }
+        };
 
-        const existingInvites = JSON.parse(localStorage.getItem(`invites_${user.id}`) || "[]")
-        const updatedInvites = [...existingInvites, newInvitation]
-        localStorage.setItem(`invites_${user.id}`, JSON.stringify(updatedInvites))
-        setSentInvitations(updatedInvites)
+        const existingInvites = JSON.parse(localStorage.getItem(`invites_${user.id}`) || "[]");
+        const updatedInvites = [...existingInvites, newInvitation];
+        localStorage.setItem(`invites_${user.id}`, JSON.stringify(updatedInvites));
+        setSentInvitations(updatedInvites);
 
-        setInviteEmail("")
+        setInviteEmail("");
 
         const successMessage =
           `✅ Invitation envoyée à ${emailToInvite} !\n\n` +
@@ -122,16 +122,16 @@ const ConnectCoParent: React.FC = () => {
           `L'email contient :\n` +
           `• Lien de téléchargement de l'app\n` +
           `• Votre code : ${inviteCode}\n` +
-          `• Instructions complètes`
+          `• Instructions complètes`;
 
-        alert(successMessage)
+        alert(successMessage);
 
-        setInviteSuccess(true)
+        setInviteSuccess(true);
         setTimeout(() => {
-          setInviteSuccess(false)
-        }, 5000)
+          setInviteSuccess(false);
+        }, 5000);
       } else {
-        console.error(`❌ ÉCHEC INVITATION après ${result.attempts} tentatives:`, result.error)
+        console.error(`❌ ÉCHEC INVITATION après ${result.attempts} tentatives:`, result.error);
 
         // Fallback manuel
         const fallbackMessage =
@@ -140,34 +140,34 @@ const ConnectCoParent: React.FC = () => {
           `📱 Partagez manuellement :\n` +
           `• Code: ${inviteCode}\n` +
           `• App: ${window.location.origin}\n\n` +
-          `💡 Votre co-parent peut créer son compte puis entrer votre code`
+          `💡 Votre co-parent peut créer son compte puis entrer votre code`;
 
-        alert(fallbackMessage)
+        alert(fallbackMessage);
       }
     } catch (error: any) {
-      console.error("❌ ERREUR CRITIQUE INVITATION:", error)
-      alert(`❌ Erreur lors de l'invitation: ${error.message}`)
+      console.error("❌ ERREUR CRITIQUE INVITATION:", error);
+      alert(`❌ Erreur lors de l'invitation: ${error.message}`);
     } finally {
-      setIsInviting(false)
+      setIsInviting(false);
     }
-  }
+  };
 
   const copyInviteCode = () => {
-    const code = profile?.invite_code || `CP-${user?.id.slice(-8).toUpperCase()}`
-    navigator.clipboard.writeText(code)
-    alert("📋 Code copié dans le presse-papier !")
-  }
+    const code = profile?.invite_code || `CP-${user?.id.slice(-8).toUpperCase()}`;
+    navigator.clipboard.writeText(code);
+    alert("📋 Code copié dans le presse-papier !");
+  };
 
   const cancelInvitation = async (invitationId: string) => {
     try {
       // Supprimer l'invitation du localStorage en mode démo
-      const updatedInvites = sentInvitations.filter((invite) => invite.id !== invitationId)
-      setSentInvitations(updatedInvites)
-      localStorage.setItem(`invites_${user?.id}`, JSON.stringify(updatedInvites))
+      const updatedInvites = sentInvitations.filter((invite) => invite.id !== invitationId);
+      setSentInvitations(updatedInvites);
+      localStorage.setItem(`invites_${user?.id}`, JSON.stringify(updatedInvites));
     } catch (error) {
-      console.error("Erreur annulation:", error)
+      console.error("Erreur annulation:", error);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -479,7 +479,7 @@ const ConnectCoParent: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ConnectCoParent
+export default ConnectCoParent;

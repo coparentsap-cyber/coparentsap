@@ -1,3 +1,3 @@
 export default function Planning() {
-  return <h1>📅 Planning</h1>
+  return <h1>📅 Planning</h1>;
 }

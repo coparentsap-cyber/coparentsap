@@ -1,3 +1,3 @@
 export default function RendezVous() {
-  return <h1>📅 Rendez-vous</h1>
+  return <h1>📅 Rendez-vous</h1>;
 }

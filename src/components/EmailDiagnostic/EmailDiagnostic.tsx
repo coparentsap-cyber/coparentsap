@@ -1,84 +1,84 @@
-import React, { useState } from "react"
-import { motion } from "framer-motion"
-import { Mail, CheckCircle, XCircle, Play, RefreshCw, Zap, Search, Activity } from "lucide-react"
-import { emailVerificationService } from "../../lib/email-verification"
-import { deepEmailDiagnosticService } from "../../lib/email-deep-diagnostic"
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Mail, CheckCircle, XCircle, Play, RefreshCw, Zap, Search, Activity } from "lucide-react";
+import { emailVerificationService } from "../../lib/email-verification";
+import { deepEmailDiagnosticService } from "../../lib/email-deep-diagnostic";
 
 const EmailDiagnostic: React.FC = () => {
-  const [isRunning, setIsRunning] = useState(false)
-  const [results, setResults] = useState<any>(null)
-  const [deepResults, setDeepResults] = useState<any>(null)
+  const [isRunning, setIsRunning] = useState(false);
+  const [results, setResults] = useState<any>(null);
+  const [deepResults, setDeepResults] = useState<any>(null);
 
   const runDiagnostic = async () => {
-    setIsRunning(true)
+    setIsRunning(true);
     try {
-      const report = await emailVerificationService.runCompleteVerification()
-      setResults(report)
+      const report = await emailVerificationService.runCompleteVerification();
+      setResults(report);
     } catch (error) {
-      console.error("Erreur diagnostic:", error)
+      console.error("Erreur diagnostic:", error);
     } finally {
-      setIsRunning(false)
+      setIsRunning(false);
     }
-  }
+  };
 
   const runDeepInvestigation = async () => {
-    setIsRunning(true)
+    setIsRunning(true);
     try {
-      console.log("🔍 LANCEMENT INVESTIGATION APPROFONDIE...")
-      const report = await deepEmailDiagnosticService.runDeepInvestigation()
-      setDeepResults(report)
+      console.log("🔍 LANCEMENT INVESTIGATION APPROFONDIE...");
+      const report = await deepEmailDiagnosticService.runDeepInvestigation();
+      setDeepResults(report);
 
       // Lancer aussi les tests de stress
-      console.log("🔥 LANCEMENT TEST DE STRESS...")
-      const stressResults = await deepEmailDiagnosticService.runStressTest()
-      console.log("📊 RÉSULTATS STRESS TEST:", stressResults)
+      console.log("🔥 LANCEMENT TEST DE STRESS...");
+      const stressResults = await deepEmailDiagnosticService.runStressTest();
+      console.log("📊 RÉSULTATS STRESS TEST:", stressResults);
     } catch (error) {
-      console.error("❌ Erreur investigation:", error)
+      console.error("❌ Erreur investigation:", error);
       alert(
         "❌ Erreur lors de l'investigation approfondie\n\nVérifiez la console pour plus de détails"
-      )
+      );
     } finally {
-      setIsRunning(false)
+      setIsRunning(false);
     }
-  }
+  };
 
   const runManualEmailTest = async () => {
-    setIsRunning(true)
+    setIsRunning(true);
     try {
-      console.log("📧 LANCEMENT TEST MANUEL D'EMAILS...")
-      const testResults = await deepEmailDiagnosticService.testManualEmailSending()
+      console.log("📧 LANCEMENT TEST MANUEL D'EMAILS...");
+      const testResults = await deepEmailDiagnosticService.testManualEmailSending();
 
-      const successCount = testResults.filter((t) => t.success).length
+      const successCount = testResults.filter((t) => t.success).length;
       alert(
         `📧 TESTS MANUELS TERMINÉS !\n\n` +
           `✅ Succès: ${successCount}/${testResults.length}\n` +
           `📊 Détails complets dans la console\n\n` +
           `💡 Vérifiez les logs pour identifier les problèmes`
-      )
+      );
     } catch (error) {
-      console.error("❌ Erreur tests manuels:", error)
-      alert("❌ Erreur lors des tests manuels\n\nVérifiez la console pour plus de détails")
+      console.error("❌ Erreur tests manuels:", error);
+      alert("❌ Erreur lors des tests manuels\n\nVérifiez la console pour plus de détails");
     } finally {
-      setIsRunning(false)
+      setIsRunning(false);
     }
-  }
+  };
 
   const testEmailSending = async () => {
-    setIsRunning(true)
+    setIsRunning(true);
     try {
-      await emailVerificationService.testMultipleEmailAddresses()
+      await emailVerificationService.testMultipleEmailAddresses();
       alert(
         `📧 Tests d'envoi terminés !\n\n` +
           `💡 Vérifiez la console pour les résultats détaillés\n` +
           `🚨 Rappel : 90% des emails arrivent dans le Spam`
-      )
+      );
     } catch (error) {
-      console.error("Erreur test emails:", error)
-      alert("❌ Erreur lors des tests d'envoi\n\nVérifiez la console pour plus de détails")
+      console.error("Erreur test emails:", error);
+      alert("❌ Erreur lors des tests d'envoi\n\nVérifiez la console pour plus de détails");
     } finally {
-      setIsRunning(false)
+      setIsRunning(false);
     }
-  }
+  };
 
   return (
     <div className="p-6">
@@ -135,19 +135,19 @@ const EmailDiagnostic: React.FC = () => {
 
           <button
             onClick={async () => {
-              setIsRunning(true)
+              setIsRunning(true);
               try {
-                const logs = await deepEmailDiagnosticService.analyzeSupabaseLogs()
-                console.log("📋 LOGS SUPABASE:", logs)
+                const logs = await deepEmailDiagnosticService.analyzeSupabaseLogs();
+                console.log("📋 LOGS SUPABASE:", logs);
                 alert(
                   `📋 ANALYSE LOGS TERMINÉE\n\n` +
                     `Disponibles: ${logs.available ? "Oui" : "Non"}\n` +
                     `Détails dans la console`
-                )
+                );
               } catch (error) {
-                console.error("Erreur logs:", error)
+                console.error("Erreur logs:", error);
               } finally {
-                setIsRunning(false)
+                setIsRunning(false);
               }
             }}
             disabled={isRunning}
@@ -345,7 +345,7 @@ const EmailDiagnostic: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EmailDiagnostic
+export default EmailDiagnostic;

@@ -1,47 +1,47 @@
-import { supabase } from "./supabase"
-import { notificationService } from "./notifications"
+import { supabase } from "./supabase";
+import { notificationService } from "./notifications";
 
 export interface Document {
-  id: string
-  titre: string
-  fichier_url: string
-  fichier_nom: string
-  fichier_taille?: number
-  fichier_type?: string
-  proprietaire_id: string
-  enfant_id?: string
-  validation_requise: boolean
-  valide_par?: string
-  statut: "en_attente" | "valide" | "refuse"
-  created_at: string
-  updated_at: string
-  enfant?: any
-  proprietaire?: any
+  id: string;
+  titre: string;
+  fichier_url: string;
+  fichier_nom: string;
+  fichier_taille?: number;
+  fichier_type?: string;
+  proprietaire_id: string;
+  enfant_id?: string;
+  validation_requise: boolean;
+  valide_par?: string;
+  statut: "en_attente" | "valide" | "refuse";
+  created_at: string;
+  updated_at: string;
+  enfant?: any;
+  proprietaire?: any;
 }
 
 class DocumentsService {
-  private static instance: DocumentsService
+  private static instance: DocumentsService;
 
   static getInstance(): DocumentsService {
     if (!DocumentsService.instance) {
-      DocumentsService.instance = new DocumentsService()
+      DocumentsService.instance = new DocumentsService();
     }
-    return DocumentsService.instance
+    return DocumentsService.instance;
   }
 
   // Uploader un document
   async upload(file: File, titre: string, enfantId?: string, validationRequise: boolean = false) {
     try {
       // Upload du fichier vers Supabase Storage
-      const fileName = `${Date.now()}-${file.name}`
+      const fileName = `${Date.now()}-${file.name}`;
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("documents")
-        .upload(fileName, file)
+        .upload(fileName, file);
 
-      if (uploadError) throw uploadError
+      if (uploadError) throw uploadError;
 
       // Obtenir l'URL publique
-      const { data: urlData } = supabase.storage.from("documents").getPublicUrl(fileName)
+      const { data: urlData } = supabase.storage.from("documents").getPublicUrl(fileName);
 
       // Créer l'enregistrement en base
       const { data: documentData, error: documentError } = await supabase
@@ -63,16 +63,16 @@ class DocumentsService {
           proprietaire:users_profiles!proprietaire_id(full_name)
         `
         )
-        .single()
+        .single();
 
-      if (documentError) throw documentError
+      if (documentError) throw documentError;
 
       // Notifier le co-parent
-      await this.notifyCoParent(documentData, "ajout")
+      await this.notifyCoParent(documentData, "ajout");
 
-      return documentData
+      return documentData;
     } catch (error: any) {
-      throw new Error(error.message)
+      throw new Error(error.message);
     }
   }
 
@@ -88,12 +88,12 @@ class DocumentsService {
           proprietaire:users_profiles!proprietaire_id(full_name)
         `
         )
-        .order("created_at", { ascending: false })
+        .order("created_at", { ascending: false });
 
-      if (error) throw error
-      return data || []
+      if (error) throw error;
+      return data || [];
     } catch (error: any) {
-      throw new Error(error.message)
+      throw new Error(error.message);
     }
   }
 
@@ -115,16 +115,16 @@ class DocumentsService {
           proprietaire:users_profiles!proprietaire_id(full_name)
         `
         )
-        .single()
+        .single();
 
-      if (error) throw error
+      if (error) throw error;
 
       // Notifier le propriétaire
-      await this.notifyCoParent(data, approved ? "validation" : "refus")
+      await this.notifyCoParent(data, approved ? "validation" : "refus");
 
-      return data
+      return data;
     } catch (error: any) {
-      throw new Error(error.message)
+      throw new Error(error.message);
     }
   }
 
@@ -136,24 +136,24 @@ class DocumentsService {
         .from("documents")
         .select("fichier_url, fichier_nom")
         .eq("id", documentId)
-        .single()
+        .single();
 
       if (document) {
         // Supprimer le fichier du storage
-        const fileName = document.fichier_url.split("/").pop()
+        const fileName = document.fichier_url.split("/").pop();
         if (fileName) {
-          await supabase.storage.from("documents").remove([fileName])
+          await supabase.storage.from("documents").remove([fileName]);
         }
       }
 
       // Supprimer l'enregistrement
-      const { error } = await supabase.from("documents").delete().eq("id", documentId)
+      const { error } = await supabase.from("documents").delete().eq("id", documentId);
 
-      if (error) throw error
+      if (error) throw error;
 
-      return true
+      return true;
     } catch (error: any) {
-      throw new Error(error.message)
+      throw new Error(error.message);
     }
   }
 
@@ -165,9 +165,9 @@ class DocumentsService {
         .from("coparent_connections")
         .select("coparent_id")
         .eq("user_id", document.proprietaire_id)
-        .eq("status", "connected")
+        .eq("status", "connected");
 
-      if (!connections || connections.length === 0) return
+      if (!connections || connections.length === 0) return;
 
       const messages = {
         ajout: {
@@ -182,7 +182,7 @@ class DocumentsService {
           title: "Document refusé",
           message: `Votre document "${document.titre}" a été refusé`,
         },
-      }
+      };
 
       for (const connection of connections) {
         await notificationService.createNotification({
@@ -192,17 +192,17 @@ class DocumentsService {
           from_user_id: document.proprietaire_id,
           to_user_id: connection.coparent_id,
           data: { document_id: document.id },
-        })
+        });
       }
     } catch (error) {
-      console.error("Erreur notification co-parent:", error)
+      console.error("Erreur notification co-parent:", error);
     }
   }
 
   // Exporter documents en PDF
   async exportToPDF(userId: string) {
     try {
-      const documents = await this.getAll()
+      const documents = await this.getAll();
 
       // Créer le contenu PDF
       const pdfContent = {
@@ -215,27 +215,27 @@ class DocumentsService {
           statut: doc.statut,
           taille: this.formatFileSize(doc.fichier_taille),
         })),
-      }
+      };
 
       // Appeler la fonction edge pour générer le PDF
       const { data, error } = await supabase.functions.invoke("generate-pdf", {
         body: { type: "documents", content: pdfContent },
-      })
+      });
 
-      if (error) throw error
+      if (error) throw error;
 
-      return data.pdf_url
+      return data.pdf_url;
     } catch (error: any) {
-      throw new Error(error.message)
+      throw new Error(error.message);
     }
   }
 
   private formatFileSize(bytes?: number) {
-    if (!bytes) return "Taille inconnue"
-    const sizes = ["Bytes", "KB", "MB", "GB"]
-    const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
+    if (!bytes) return "Taille inconnue";
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
   }
 }
 
-export const documentsService = DocumentsService.getInstance()
+export const documentsService = DocumentsService.getInstance();

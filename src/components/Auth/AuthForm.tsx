@@ -1,96 +1,96 @@
-import React, { useState } from "react"
-import { motion } from "framer-motion"
-import { Mail, Lock, User, Eye, EyeOff } from "lucide-react"
-import Logo from "../UI/Logo"
-import { useAuth } from "../../contexts/AuthContext"
-import { supabase } from "../../lib/supabase"
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import Logo from "../UI/Logo";
+import { useAuth } from "../../contexts/AuthContext";
+import { supabase } from "../../lib/supabase";
 
 interface AuthFormProps {
-  onSuccess: (user: any, profile: any) => void
+  onSuccess: (user: any, profile: any) => void;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
-  const { signIn, signUp } = useAuth()
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [isLogin, setIsLogin] = useState(true)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [fullName, setFullName] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [showForgotPassword, setShowForgotPassword] = useState(false)
-  const [resetEmail, setResetEmail] = useState("")
+  const { signIn, signUp } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
 
   const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
     try {
-      console.log("🔧 CONNEXION AVEC SERVICE RENFORCÉ...")
-      const result = await signIn(email, password)
+      console.log("🔧 CONNEXION AVEC SERVICE RENFORCÉ...");
+      const result = await signIn(email, password);
 
-      console.log("✅ CONNEXION RÉUSSIE:", result)
-      onSuccess(result.user, result.session)
+      console.log("✅ CONNEXION RÉUSSIE:", result);
+      onSuccess(result.user, result.session);
     } catch (err: any) {
-      console.error("❌ ERREUR CONNEXION:", err)
-      setError(err.message || "Erreur de connexion")
+      console.error("❌ ERREUR CONNEXION:", err);
+      setError(err.message || "Erreur de connexion");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
     try {
       if (!supabase) {
-        throw new Error("Veuillez configurer Supabase")
+        throw new Error("Veuillez configurer Supabase");
       }
 
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
         redirectTo: `${window.location.origin}/reset-password`,
-      })
+      });
 
-      if (error) throw error
+      if (error) throw error;
 
-      setError("")
-      alert("Email de réinitialisation envoyé ! Vérifiez votre boîte mail (et le dossier Spam).")
-      setShowForgotPassword(false)
+      setError("");
+      alert("Email de réinitialisation envoyé ! Vérifiez votre boîte mail (et le dossier Spam).");
+      setShowForgotPassword(false);
     } catch (err: any) {
-      setError(err.message || "Erreur lors de l'envoi de l'email")
+      setError(err.message || "Erreur lors de l'envoi de l'email");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (password !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas")
-      return
+      setError("Les mots de passe ne correspondent pas");
+      return;
     }
 
     if (password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères")
-      return
+      setError("Le mot de passe doit contenir au moins 6 caractères");
+      return;
     }
 
-    setError("")
-    setIsLoading(true)
+    setError("");
+    setIsLoading(true);
 
     try {
-      console.log("🔧 INSCRIPTION AVEC SERVICE RENFORCÉ...")
-      const result = await signUp(email, password, fullName)
+      console.log("🔧 INSCRIPTION AVEC SERVICE RENFORCÉ...");
+      const result = await signUp(email, password, fullName);
 
       console.log("✅ INSCRIPTION RÉUSSIE:", {
         hasUser: !!result.user,
         hasSession: !!result.session,
         needsConfirmation: result.needsEmailConfirmation,
-      })
+      });
 
       if (result.needsEmailConfirmation) {
         alert(
@@ -99,9 +99,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
             "🚨 VÉRIFIEZ VOTRE DOSSIER SPAM !\n" +
             "📁 90% des emails arrivent dans le Spam\n\n" +
             "Cliquez sur le lien dans l'email pour activer votre compte."
-        )
-        setIsLoading(false)
-        return
+        );
+        setIsLoading(false);
+        return;
       }
 
       // Afficher message de succès avec alerte Spam
@@ -112,33 +112,33 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           "🚨 IMPORTANT : VÉRIFIEZ VOTRE DOSSIER SPAM !\n" +
           "📁 90% des emails Co-Parents y arrivent\n" +
           '✅ Marquez comme "Pas spam"'
-      )
+      );
 
-      onSuccess(result.user, result.profile)
+      onSuccess(result.user, result.profile);
     } catch (err: any) {
-      console.error("Erreur inscription:", err)
+      console.error("Erreur inscription:", err);
 
       // Messages d'erreur plus clairs
-      let errorMessage = err.message || "Erreur lors de l'inscription"
+      let errorMessage = err.message || "Erreur lors de l'inscription";
 
       if (errorMessage.includes("row-level security")) {
         errorMessage =
-          "Erreur de sécurité lors de la création du profil. Les policies RLS doivent être configurées."
+          "Erreur de sécurité lors de la création du profil. Les policies RLS doivent être configurées.";
       } else if (errorMessage.includes("email")) {
         errorMessage =
-          "Problème avec l'adresse email ou l'envoi de confirmation. Vérifiez votre dossier Spam."
+          "Problème avec l'adresse email ou l'envoi de confirmation. Vérifiez votre dossier Spam.";
       } else if (errorMessage.includes("password")) {
-        errorMessage = "Problème avec le mot de passe. Vérifiez qu'il fait au moins 6 caractères."
+        errorMessage = "Problème avec le mot de passe. Vérifiez qu'il fait au moins 6 caractères.";
       } else if (errorMessage.includes("confirmation email")) {
         errorMessage =
-          "Erreur d'envoi d'email. Votre compte a été créé mais l'email de confirmation n'a pas pu être envoyé. Vérifiez votre dossier Spam."
+          "Erreur d'envoi d'email. Votre compte a été créé mais l'email de confirmation n'a pas pu être envoyé. Vérifiez votre dossier Spam.";
       }
 
-      setError(errorMessage)
+      setError(errorMessage);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   if (showForgotPassword) {
     return (
@@ -207,7 +207,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           </div>
         </motion.div>
       </div>
-    )
+    );
   }
 
   return (
@@ -390,11 +390,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
               <button
                 type="button"
                 onClick={() => {
-                  setIsLogin(!isLogin)
-                  setError("")
-                  setEmail("")
-                  setPassword("")
-                  setConfirmPassword("")
+                  setIsLogin(!isLogin);
+                  setError("");
+                  setEmail("");
+                  setPassword("");
+                  setConfirmPassword("");
                 }}
                 className="text-blue-600 hover:text-blue-700 text-sm"
               >
@@ -454,7 +454,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         </div>
       </motion.div>
     </div>
-  )
-}
+  );
+};
 
-export default AuthForm
+export default AuthForm;

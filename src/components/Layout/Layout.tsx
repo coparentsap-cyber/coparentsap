@@ -1,11 +1,11 @@
-import { useState } from "react"
-import { Outlet } from "react-router-dom"
-import SideMenu from "./SideMenu"
-import BottomNav from "./BottomNav"
-import Header from "./Header"
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import SideMenu from "./SideMenu";
+import BottomNav from "./BottomNav";
+import Header from "./Header";
 
 export default function Layout() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-neutral-light dark:bg-gray-900">
@@ -34,5 +34,5 @@ export default function Layout() {
       {/* ✅ Navigation mobile en bas */}
       <BottomNav />
     </div>
-  )
+  );
 }

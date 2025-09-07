@@ -1,3 +1,3 @@
 export default function Conversations() {
-  return <h1>📂 Conversations</h1>
+  return <h1>📂 Conversations</h1>;
 }

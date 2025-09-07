@@ -1,3 +1,3 @@
 export default function Invitations() {
-  return <h1>✉️ Invitations</h1>
+  return <h1>✉️ Invitations</h1>;
 }

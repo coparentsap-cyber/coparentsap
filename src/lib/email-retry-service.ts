@@ -1,40 +1,40 @@
 // Service de retry et gestion robuste des emails
 
 interface EmailRetryConfig {
-  maxRetries: number
-  retryDelay: number
-  backoffMultiplier: number
-  timeoutMs: number
+  maxRetries: number;
+  retryDelay: number;
+  backoffMultiplier: number;
+  timeoutMs: number;
 }
 
 interface EmailQueueItem {
-  id: string
-  type: "welcome" | "invitation" | "reset"
-  to_email: string
-  from_user_name: string
-  invite_code: string
-  attempts: number
-  created_at: string
-  last_attempt: string
-  status: "pending" | "sent" | "failed" | "expired"
-  error_log: string[]
+  id: string;
+  type: "welcome" | "invitation" | "reset";
+  to_email: string;
+  from_user_name: string;
+  invite_code: string;
+  attempts: number;
+  created_at: string;
+  last_attempt: string;
+  status: "pending" | "sent" | "failed" | "expired";
+  error_log: string[];
 }
 
 class EmailRetryService {
-  private static instance: EmailRetryService
+  private static instance: EmailRetryService;
   private config: EmailRetryConfig = {
     maxRetries: 5,
     retryDelay: 2000, // 2 secondes
     backoffMultiplier: 2,
     timeoutMs: 30000, // 30 secondes
-  }
-  private queue: EmailQueueItem[] = []
+  };
+  private queue: EmailQueueItem[] = [];
 
   static getInstance(): EmailRetryService {
     if (!EmailRetryService.instance) {
-      EmailRetryService.instance = new EmailRetryService()
+      EmailRetryService.instance = new EmailRetryService();
     }
-    return EmailRetryService.instance
+    return EmailRetryService.instance;
   }
 
   // Envoyer email avec retry automatique
@@ -44,7 +44,7 @@ class EmailRetryService {
     fromUserName: string,
     inviteCode: string
   ): Promise<{ success: boolean; id?: string; error?: string; attempts: number }> {
-    console.log(`🔄 ENVOI EMAIL AVEC RETRY: ${type} vers ${toEmail}`)
+    console.log(`🔄 ENVOI EMAIL AVEC RETRY: ${type} vers ${toEmail}`);
 
     const queueItem: EmailQueueItem = {
       id: Date.now().toString(),
@@ -57,50 +57,50 @@ class EmailRetryService {
       last_attempt: new Date().toISOString(),
       status: "pending",
       error_log: [],
-    }
+    };
 
-    this.queue.push(queueItem)
+    this.queue.push(queueItem);
 
     for (let attempt = 1; attempt <= this.config.maxRetries; attempt++) {
-      console.log(`📧 Tentative ${attempt}/${this.config.maxRetries} pour ${toEmail}`)
+      console.log(`📧 Tentative ${attempt}/${this.config.maxRetries} pour ${toEmail}`);
 
-      queueItem.attempts = attempt
-      queueItem.last_attempt = new Date().toISOString()
+      queueItem.attempts = attempt;
+      queueItem.last_attempt = new Date().toISOString();
 
       try {
-        const result = await this.attemptEmailSend(queueItem)
+        const result = await this.attemptEmailSend(queueItem);
 
         if (result.success) {
-          console.log(`✅ SUCCÈS après ${attempt} tentative(s)`)
-          queueItem.status = "sent"
-          return { success: true, id: result.id, attempts: attempt }
+          console.log(`✅ SUCCÈS après ${attempt} tentative(s)`);
+          queueItem.status = "sent";
+          return { success: true, id: result.id, attempts: attempt };
         } else {
-          queueItem.error_log.push(`Tentative ${attempt}: ${result.error}`)
-          console.log(`❌ Échec tentative ${attempt}: ${result.error}`)
+          queueItem.error_log.push(`Tentative ${attempt}: ${result.error}`);
+          console.log(`❌ Échec tentative ${attempt}: ${result.error}`);
         }
       } catch (error: any) {
-        const errorMsg = `Tentative ${attempt} - Exception: ${error.message}`
-        queueItem.error_log.push(errorMsg)
-        console.error(`❌ Exception tentative ${attempt}:`, error)
+        const errorMsg = `Tentative ${attempt} - Exception: ${error.message}`;
+        queueItem.error_log.push(errorMsg);
+        console.error(`❌ Exception tentative ${attempt}:`, error);
       }
 
       // Attendre avant retry (sauf dernière tentative)
       if (attempt < this.config.maxRetries) {
-        const delay = this.config.retryDelay * Math.pow(this.config.backoffMultiplier, attempt - 1)
-        console.log(`⏳ Attente ${delay}ms avant retry...`)
-        await new Promise((resolve) => setTimeout(resolve, delay))
+        const delay = this.config.retryDelay * Math.pow(this.config.backoffMultiplier, attempt - 1);
+        console.log(`⏳ Attente ${delay}ms avant retry...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
 
     // Toutes les tentatives ont échoué
-    console.error(`❌ ÉCHEC DÉFINITIF après ${this.config.maxRetries} tentatives`)
-    queueItem.status = "failed"
+    console.error(`❌ ÉCHEC DÉFINITIF après ${this.config.maxRetries} tentatives`);
+    queueItem.status = "failed";
 
     return {
       success: false,
       error: `Échec après ${this.config.maxRetries} tentatives: ${queueItem.error_log.join("; ")}`,
       attempts: this.config.maxRetries,
-    }
+    };
   }
 
   // Tentative d'envoi unique avec timeout
@@ -110,19 +110,20 @@ class EmailRetryService {
     return new Promise(async (resolve, reject) => {
       // Timeout
       const timeoutId = setTimeout(() => {
-        reject(new Error(`Timeout après ${this.config.timeoutMs}ms`))
-      }, this.config.timeoutMs)
+        reject(new Error(`Timeout après ${this.config.timeoutMs}ms`));
+      }, this.config.timeoutMs);
 
       try {
-        const apiKey = import.meta.env.VITE_RESEND_API_KEY || "re_f8qnHXsH_3UYWfjSpHnFXQiSZZGBoVdkD"
+        const apiKey =
+          import.meta.env.VITE_RESEND_API_KEY || "re_f8qnHXsH_3UYWfjSpHnFXQiSZZGBoVdkD";
 
         if (!apiKey) {
-          throw new Error("Clé API Resend manquante")
+          throw new Error("Clé API Resend manquante");
         }
 
-        const emailData = this.buildEmailData(queueItem)
+        const emailData = this.buildEmailData(queueItem);
 
-        console.log(`📤 Envoi vers ${queueItem.to_email}...`)
+        console.log(`📤 Envoi vers ${queueItem.to_email}...`);
 
         const response = await fetch("https://api.resend.com/emails", {
           method: "POST",
@@ -132,37 +133,37 @@ class EmailRetryService {
             "User-Agent": "Co-Parents-App/1.0",
           },
           body: JSON.stringify(emailData),
-        })
+        });
 
-        clearTimeout(timeoutId)
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
-          const errorText = await response.text()
-          console.error(`❌ Erreur HTTP ${response.status}:`, errorText)
+          const errorText = await response.text();
+          console.error(`❌ Erreur HTTP ${response.status}:`, errorText);
 
           // Analyser le type d'erreur
           if (response.status === 429) {
-            resolve({ success: false, error: "Rate limit exceeded - Retry plus tard" })
+            resolve({ success: false, error: "Rate limit exceeded - Retry plus tard" });
           } else if (response.status === 401) {
-            resolve({ success: false, error: "Clé API invalide" })
+            resolve({ success: false, error: "Clé API invalide" });
           } else if (response.status >= 500) {
-            resolve({ success: false, error: "Erreur serveur Resend - Retry possible" })
+            resolve({ success: false, error: "Erreur serveur Resend - Retry possible" });
           } else {
-            resolve({ success: false, error: `Erreur client ${response.status}: ${errorText}` })
+            resolve({ success: false, error: `Erreur client ${response.status}: ${errorText}` });
           }
-          return
+          return;
         }
 
-        const result = await response.json()
-        console.log(`✅ Email envoyé avec ID: ${result.id}`)
+        const result = await response.json();
+        console.log(`✅ Email envoyé avec ID: ${result.id}`);
 
-        resolve({ success: true, id: result.id })
+        resolve({ success: true, id: result.id });
       } catch (error: any) {
-        clearTimeout(timeoutId)
-        console.error(`❌ Exception lors de l'envoi:`, error)
-        resolve({ success: false, error: error.message })
+        clearTimeout(timeoutId);
+        console.error(`❌ Exception lors de l'envoi:`, error);
+        resolve({ success: false, error: error.message });
       }
-    })
+    });
   }
 
   // Construire les données d'email
@@ -174,7 +175,7 @@ class EmailRetryService {
         "X-Entity-Ref-ID": queueItem.id,
         "X-Retry-Attempt": queueItem.attempts.toString(),
       },
-    }
+    };
 
     switch (queueItem.type) {
       case "welcome":
@@ -182,21 +183,21 @@ class EmailRetryService {
           ...baseData,
           subject: "🎉 Bienvenue sur Co-Parents !",
           html: this.generateSimpleWelcomeHTML(queueItem.from_user_name, queueItem.invite_code),
-        }
+        };
       case "invitation":
         return {
           ...baseData,
           subject: `${queueItem.from_user_name} vous invite sur Co-Parents 👨‍👩‍👧‍👦`,
           html: this.generateSimpleInviteHTML(queueItem.from_user_name, queueItem.invite_code),
-        }
+        };
       case "reset":
         return {
           ...baseData,
           subject: "🔒 Réinitialisation mot de passe Co-Parents",
           html: this.generateSimpleResetHTML(queueItem.from_user_name),
-        }
+        };
       default:
-        throw new Error(`Type d'email non supporté: ${queueItem.type}`)
+        throw new Error(`Type d'email non supporté: ${queueItem.type}`);
     }
   }
 
@@ -258,7 +259,7 @@ class EmailRetryService {
         </div>
       </body>
       </html>
-    `
+    `;
   }
 
   private generateSimpleInviteHTML(fromName: string, code: string) {
@@ -318,7 +319,7 @@ class EmailRetryService {
         </div>
       </body>
       </html>
-    `
+    `;
   }
 
   private generateSimpleResetHTML(name: string) {
@@ -348,7 +349,7 @@ class EmailRetryService {
         </div>
       </body>
       </html>
-    `
+    `;
   }
 
   // Obtenir le statut de la queue
@@ -359,44 +360,44 @@ class EmailRetryService {
       sent: this.queue.filter((item) => item.status === "sent").length,
       failed: this.queue.filter((item) => item.status === "failed").length,
       queue: this.queue,
-    }
+    };
   }
 
   // Nettoyer la queue (supprimer les anciens éléments)
   cleanQueue() {
-    const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000
-    const initialLength = this.queue.length
+    const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+    const initialLength = this.queue.length;
 
-    this.queue = this.queue.filter((item) => new Date(item.created_at).getTime() > oneDayAgo)
+    this.queue = this.queue.filter((item) => new Date(item.created_at).getTime() > oneDayAgo);
 
-    const cleaned = initialLength - this.queue.length
-    console.log(`🧹 Queue nettoyée: ${cleaned} éléments supprimés`)
+    const cleaned = initialLength - this.queue.length;
+    console.log(`🧹 Queue nettoyée: ${cleaned} éléments supprimés`);
 
-    return { cleaned, remaining: this.queue.length }
+    return { cleaned, remaining: this.queue.length };
   }
 
   // Réessayer les emails échoués
   async retryFailedEmails() {
-    const failedItems = this.queue.filter((item) => item.status === "failed")
-    console.log(`🔄 RETRY ${failedItems.length} emails échoués...`)
+    const failedItems = this.queue.filter((item) => item.status === "failed");
+    console.log(`🔄 RETRY ${failedItems.length} emails échoués...`);
 
-    const results = []
+    const results = [];
 
     for (const item of failedItems) {
-      console.log(`🔄 Retry email ${item.type} vers ${item.to_email}`)
+      console.log(`🔄 Retry email ${item.type} vers ${item.to_email}`);
 
       const result = await this.sendEmailWithRetry(
         item.type,
         item.to_email,
         item.from_user_name,
         item.invite_code
-      )
+      );
 
-      results.push({ item: item.id, ...result })
+      results.push({ item: item.id, ...result });
     }
 
-    return results
+    return results;
   }
 }
 
-export const emailRetryService = EmailRetryService.getInstance()
+export const emailRetryService = EmailRetryService.getInstance();

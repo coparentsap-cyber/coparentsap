@@ -1,3 +1,3 @@
 export default function DocumentsView() {
-  return <h1>📂 Documents</h1>
+  return <h1>📂 Documents</h1>;
 }

@@ -1,24 +1,24 @@
-import { useState } from "react"
-import { supabase } from "../lib/supabaseClient"
+import { useState } from "react";
+import { supabase } from "../lib/supabaseClient";
 export default function AuthForm() {
-  const [email, setEmail] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [msg, setMsg] = useState<string | null>(null)
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
   const handle = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setMsg(null)
+    e.preventDefault();
+    setLoading(true);
+    setMsg(null);
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
-    })
-    setLoading(false)
-    setMsg(error ? `Erreur : ${error.message}` : "Lien envoyé ! Vérifie ta boîte mail.")
-  }
+    });
+    setLoading(false);
+    setMsg(error ? `Erreur : ${error.message}` : "Lien envoyé ! Vérifie ta boîte mail.");
+  };
   const out = async () => {
-    await supabase.auth.signOut()
-    setMsg("Déconnecté.")
-  }
+    await supabase.auth.signOut();
+    setMsg("Déconnecté.");
+  };
   return (
     <div style={{ maxWidth: 420, margin: "40px auto", padding: 16 }}>
       <h2>Connexion par lien magique</h2>
@@ -41,5 +41,5 @@ export default function AuthForm() {
       </button>
       {msg && <p style={{ marginTop: 12 }}>{msg}</p>}
     </div>
-  )
+  );
 }

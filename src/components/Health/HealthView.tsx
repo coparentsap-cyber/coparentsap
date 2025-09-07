@@ -1,54 +1,56 @@
-import React, { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Heart, Plus, User, Clock, X, Phone, MapPin } from "lucide-react"
-import { format, isBefore, isToday, isTomorrow } from "date-fns"
-import { fr } from "date-fns/locale"
-import { useAuth } from "../../contexts/AuthContext"
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Heart, Plus, User, Clock, X, Phone, MapPin } from "lucide-react";
+import { format, isBefore, isToday, isTomorrow } from "date-fns";
+import { fr } from "date-fns/locale";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface HealthRecord {
-  id: string
-  type: "rdv" | "vaccin" | "traitement" | "urgence"
-  titre: string
-  description: string
-  date: string
-  heure?: string
-  enfant_id?: string
-  enfant_nom?: string
+  id: string;
+  type: "rdv" | "vaccin" | "traitement" | "urgence";
+  titre: string;
+  description: string;
+  date: string;
+  heure?: string;
+  enfant_id?: string;
+  enfant_nom?: string;
   medecin?: {
-    nom: string
-    telephone?: string
-    adresse?: string
-  }
-  statut: "prevu" | "fait" | "annule"
-  rappel_active: boolean
-  created_at: string
+    nom: string;
+    telephone?: string;
+    adresse?: string;
+  };
+  statut: "prevu" | "fait" | "annule";
+  rappel_active: boolean;
+  created_at: string;
 }
 
 const HealthView: React.FC = () => {
-  const { user, profile } = useAuth()
-  const [records, setRecords] = useState<HealthRecord[]>([])
-  const [showForm, setShowForm] = useState(false)
-  const [editingRecord, setEditingRecord] = useState<HealthRecord | null>(null)
-  const [filter, setFilter] = useState<"tous" | "rdv" | "vaccin" | "traitement" | "urgence">("tous")
+  const { user, profile } = useAuth();
+  const [records, setRecords] = useState<HealthRecord[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<HealthRecord | null>(null);
+  const [filter, setFilter] = useState<"tous" | "rdv" | "vaccin" | "traitement" | "urgence">(
+    "tous"
+  );
 
   useEffect(() => {
-    loadHealthRecords()
-  }, [user])
+    loadHealthRecords();
+  }, [user]);
 
   const loadHealthRecords = () => {
-    if (!user) return
+    if (!user) return;
 
     try {
-      const savedRecords = localStorage.getItem(`health_${user.id}`)
+      const savedRecords = localStorage.getItem(`health_${user.id}`);
       if (savedRecords) {
-        const records = JSON.parse(savedRecords)
+        const records = JSON.parse(savedRecords);
         setRecords(
           records.sort(
             (a: HealthRecord, b: HealthRecord) =>
               new Date(a.date + " " + (a.heure || "00:00")).getTime() -
               new Date(b.date + " " + (b.heure || "00:00")).getTime()
           )
-        )
+        );
       } else {
         // Générer quelques enregistrements de démo
         const demoRecords: HealthRecord[] = [
@@ -119,31 +121,31 @@ const HealthView: React.FC = () => {
             rappel_active: true,
             created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
           },
-        ]
-        localStorage.setItem(`health_${user.id}`, JSON.stringify(demoRecords))
-        setRecords(demoRecords)
+        ];
+        localStorage.setItem(`health_${user.id}`, JSON.stringify(demoRecords));
+        setRecords(demoRecords);
       }
     } catch (error) {
-      console.error("Erreur lors du chargement des données santé:", error)
+      console.error("Erreur lors du chargement des données santé:", error);
     }
-  }
+  };
 
   const saveRecord = (recordData: Omit<HealthRecord, "id" | "created_at">) => {
-    if (!user) return
+    if (!user) return;
 
     const newRecord: HealthRecord = {
       ...recordData,
       id: editingRecord?.id || Date.now().toString(),
       created_at: editingRecord?.created_at || new Date().toISOString(),
-    }
+    };
 
-    let updatedRecords
+    let updatedRecords;
     if (editingRecord) {
       updatedRecords = records.map((record) =>
         record.id === editingRecord.id ? newRecord : record
-      )
+      );
     } else {
-      updatedRecords = [...records, newRecord]
+      updatedRecords = [...records, newRecord];
     }
 
     // Trier par date
@@ -151,91 +153,91 @@ const HealthView: React.FC = () => {
       (a, b) =>
         new Date(a.date + " " + (a.heure || "00:00")).getTime() -
         new Date(b.date + " " + (b.heure || "00:00")).getTime()
-    )
+    );
 
-    localStorage.setItem(`health_${user.id}`, JSON.stringify(updatedRecords))
-    setRecords(updatedRecords)
-    setShowForm(false)
-    setEditingRecord(null)
-  }
+    localStorage.setItem(`health_${user.id}`, JSON.stringify(updatedRecords));
+    setRecords(updatedRecords);
+    setShowForm(false);
+    setEditingRecord(null);
+  };
 
   const updateStatus = (id: string, newStatus: HealthRecord["statut"]) => {
     const updatedRecords = records.map((record) =>
       record.id === id ? { ...record, statut: newStatus } : record
-    )
-    localStorage.setItem(`health_${user?.id}`, JSON.stringify(updatedRecords))
-    setRecords(updatedRecords)
-  }
+    );
+    localStorage.setItem(`health_${user?.id}`, JSON.stringify(updatedRecords));
+    setRecords(updatedRecords);
+  };
 
   const deleteRecord = (id: string) => {
-    if (!confirm("Supprimer cet enregistrement ?")) return
+    if (!confirm("Supprimer cet enregistrement ?")) return;
 
-    const updatedRecords = records.filter((record) => record.id !== id)
-    localStorage.setItem(`health_${user?.id}`, JSON.stringify(updatedRecords))
-    setRecords(updatedRecords)
-  }
+    const updatedRecords = records.filter((record) => record.id !== id);
+    localStorage.setItem(`health_${user?.id}`, JSON.stringify(updatedRecords));
+    setRecords(updatedRecords);
+  };
 
   const handleCall = (phone: string) => {
-    window.location.href = `tel:${phone}`
-  }
+    window.location.href = `tel:${phone}`;
+  };
 
   const handleNavigate = (address: string) => {
-    const encodedAddress = encodeURIComponent(address)
-    const wazeUrl = `https://waze.com/ul?q=${encodedAddress}&navigate=yes`
-    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`
+    const encodedAddress = encodeURIComponent(address);
+    const wazeUrl = `https://waze.com/ul?q=${encodedAddress}&navigate=yes`;
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-    window.open(wazeUrl, "_blank") || window.open(googleMapsUrl, "_blank")
-  }
+    window.open(wazeUrl, "_blank") || window.open(googleMapsUrl, "_blank");
+  };
 
   const getTypeColor = (type: string) => {
     switch (type) {
       case "rdv":
-        return "bg-blue-100 text-blue-800 border-blue-200"
+        return "bg-blue-100 text-blue-800 border-blue-200";
       case "vaccin":
-        return "bg-green-100 text-green-800 border-green-200"
+        return "bg-green-100 text-green-800 border-green-200";
       case "traitement":
-        return "bg-purple-100 text-purple-800 border-purple-200"
+        return "bg-purple-100 text-purple-800 border-purple-200";
       case "urgence":
-        return "bg-red-100 text-red-800 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
-  }
+  };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
       case "rdv":
-        return "🩺"
+        return "🩺";
       case "vaccin":
-        return "💉"
+        return "💉";
       case "traitement":
-        return "💊"
+        return "💊";
       case "urgence":
-        return "🚨"
+        return "🚨";
       default:
-        return "📋"
+        return "📋";
     }
-  }
+  };
 
   const getDateStatus = (date: string) => {
-    const recordDate = new Date(date)
-    if (isToday(recordDate)) return { text: "Aujourd'hui", color: "text-red-600 font-bold" }
-    if (isTomorrow(recordDate)) return { text: "Demain", color: "text-orange-600 font-semibold" }
-    if (isBefore(recordDate, new Date())) return { text: "Passé", color: "text-gray-500" }
-    return { text: format(recordDate, "dd MMM", { locale: fr }), color: "text-gray-700" }
-  }
+    const recordDate = new Date(date);
+    if (isToday(recordDate)) return { text: "Aujourd'hui", color: "text-red-600 font-bold" };
+    if (isTomorrow(recordDate)) return { text: "Demain", color: "text-orange-600 font-semibold" };
+    if (isBefore(recordDate, new Date())) return { text: "Passé", color: "text-gray-500" };
+    return { text: format(recordDate, "dd MMM", { locale: fr }), color: "text-gray-700" };
+  };
 
   const filteredRecords =
-    filter === "tous" ? records : records.filter((record) => record.type === filter)
+    filter === "tous" ? records : records.filter((record) => record.type === filter);
 
   const HealthForm = ({
     record,
     onSave,
     onCancel,
   }: {
-    record?: HealthRecord
-    onSave: (data: Omit<HealthRecord, "id" | "created_at">) => void
-    onCancel: () => void
+    record?: HealthRecord;
+    onSave: (data: Omit<HealthRecord, "id" | "created_at">) => void;
+    onCancel: () => void;
   }) => {
     const [formData, setFormData] = useState({
       type: record?.type || ("rdv" as const),
@@ -248,12 +250,12 @@ const HealthView: React.FC = () => {
       medecin: record?.medecin || { nom: "", telephone: "", adresse: "" },
       statut: record?.statut || ("prevu" as const),
       rappel_active: record?.rappel_active ?? true,
-    })
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault()
-      onSave(formData)
-    }
+      e.preventDefault();
+      onSave(formData);
+    };
 
     return (
       <motion.div
@@ -451,8 +453,8 @@ const HealthView: React.FC = () => {
           </div>
         </div>
       </motion.div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="p-6 pb-20">
@@ -468,8 +470,8 @@ const HealthView: React.FC = () => {
 
           <button
             onClick={() => {
-              setEditingRecord(null)
-              setShowForm(true)
+              setEditingRecord(null);
+              setShowForm(true);
             }}
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
           >
@@ -545,7 +547,7 @@ const HealthView: React.FC = () => {
         ) : (
           <div className="space-y-4">
             {filteredRecords.map((record) => {
-              const dateStatus = getDateStatus(record.date)
+              const dateStatus = getDateStatus(record.date);
 
               return (
                 <motion.div
@@ -600,8 +602,8 @@ const HealthView: React.FC = () => {
                       )}
                       <button
                         onClick={() => {
-                          setEditingRecord(record)
-                          setShowForm(true)
+                          setEditingRecord(record);
+                          setShowForm(true);
                         }}
                         className="text-blue-500 hover:text-blue-700 p-1"
                       >
@@ -669,7 +671,7 @@ const HealthView: React.FC = () => {
                     </div>
                   )}
                 </motion.div>
-              )
+              );
             })}
           </div>
         )}
@@ -680,14 +682,14 @@ const HealthView: React.FC = () => {
             record={editingRecord || undefined}
             onSave={saveRecord}
             onCancel={() => {
-              setShowForm(false)
-              setEditingRecord(null)
+              setShowForm(false);
+              setEditingRecord(null);
             }}
           />
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HealthView
+export default HealthView;

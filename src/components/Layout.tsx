@@ -1,15 +1,15 @@
-import { Outlet, Navigate } from "react-router-dom"
-import Sidebar from "./Sidebar"
-import BottomNav from "./BottomNav"
-import MobileHeader from "./MobileHeader"
-import { useAuth } from "../contexts/AuthContext"
+import { Outlet, Navigate } from "react-router-dom";
+import Sidebar from "./Sidebar";
+import BottomNav from "./BottomNav";
+import MobileHeader from "./MobileHeader";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Layout() {
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   // ✅ Redirection auto si pas connecté
   if (!user) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -34,5 +34,5 @@ export default function Layout() {
         </div>
       </div>
     </div>
-  )
+  );
 }

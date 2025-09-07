@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useState } from "react";
 
 export default function TestEmail() {
-  const [status, setStatus] = useState<string | null>(null)
+  const [status, setStatus] = useState<string | null>(null);
 
   async function sendTestEmail() {
-    setStatus("Envoi en cours...")
+    setStatus("Envoi en cours...");
 
     try {
       const response = await fetch("/.netlify/functions/send-notification", {
@@ -15,16 +15,16 @@ export default function TestEmail() {
           subject: "Test depuis Co-Parents ✅",
           text: "Ceci est un email de test envoyé via Netlify Function + Nodemailer.",
         }),
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
       if (result.success) {
-        setStatus("✅ Email envoyé avec succès !")
+        setStatus("✅ Email envoyé avec succès !");
       } else {
-        setStatus("❌ Erreur: " + result.error)
+        setStatus("❌ Erreur: " + result.error);
       }
     } catch (err: any) {
-      setStatus("❌ Exception: " + err.message)
+      setStatus("❌ Exception: " + err.message);
     }
   }
 
@@ -36,5 +36,5 @@ export default function TestEmail() {
       </button>
       {status && <p className="mt-4">{status}</p>}
     </div>
-  )
+  );
 }

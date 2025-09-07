@@ -1,46 +1,46 @@
-import React, { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { CheckSquare, Plus, X, Calendar, User } from "lucide-react"
-import { format } from "date-fns"
-import { useAuth } from "../../contexts/AuthContext"
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { CheckSquare, Plus, X, Calendar, User } from "lucide-react";
+import { format } from "date-fns";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface Task {
-  id: string
-  titre: string
-  description: string
-  priorite: "basse" | "moyenne" | "haute" | "urgente"
-  statut: "a_faire" | "en_cours" | "terminee"
-  assignee: string
-  date_echeance?: string
-  enfant_concerne?: string
-  created_at: string
-  completed_at?: string
+  id: string;
+  titre: string;
+  description: string;
+  priorite: "basse" | "moyenne" | "haute" | "urgente";
+  statut: "a_faire" | "en_cours" | "terminee";
+  assignee: string;
+  date_echeance?: string;
+  enfant_concerne?: string;
+  created_at: string;
+  completed_at?: string;
 }
 
 const TasksView: React.FC = () => {
-  const { user, profile } = useAuth()
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [showForm, setShowForm] = useState(false)
-  const [editingTask, setEditingTask] = useState<Task | null>(null)
-  const [filter, setFilter] = useState<"toutes" | "a_faire" | "en_cours" | "terminee">("toutes")
+  const { user, profile } = useAuth();
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [filter, setFilter] = useState<"toutes" | "a_faire" | "en_cours" | "terminee">("toutes");
 
   useEffect(() => {
-    loadTasks()
-  }, [user])
+    loadTasks();
+  }, [user]);
 
   const loadTasks = () => {
-    if (!user) return
+    if (!user) return;
 
     try {
-      const savedTasks = localStorage.getItem(`tasks_${user.id}`)
+      const savedTasks = localStorage.getItem(`tasks_${user.id}`);
       if (savedTasks) {
-        const tasks = JSON.parse(savedTasks)
+        const tasks = JSON.parse(savedTasks);
         setTasks(
           tasks.sort(
             (a: Task, b: Task) =>
               new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
           )
-        )
+        );
       } else {
         // Générer quelques tâches de démo
         const demoTasks: Task[] = [
@@ -98,36 +98,36 @@ const TasksView: React.FC = () => {
             enfant_concerne: "Emma",
             created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
           },
-        ]
-        localStorage.setItem(`tasks_${user.id}`, JSON.stringify(demoTasks))
-        setTasks(demoTasks)
+        ];
+        localStorage.setItem(`tasks_${user.id}`, JSON.stringify(demoTasks));
+        setTasks(demoTasks);
       }
     } catch (error) {
-      console.error("Erreur lors du chargement des tâches:", error)
+      console.error("Erreur lors du chargement des tâches:", error);
     }
-  }
+  };
 
   const saveTask = (taskData: Omit<Task, "id" | "created_at">) => {
-    if (!user) return
+    if (!user) return;
 
     const newTask: Task = {
       ...taskData,
       id: editingTask?.id || Date.now().toString(),
       created_at: editingTask?.created_at || new Date().toISOString(),
-    }
+    };
 
-    let updatedTasks
+    let updatedTasks;
     if (editingTask) {
-      updatedTasks = tasks.map((task) => (task.id === editingTask.id ? newTask : task))
+      updatedTasks = tasks.map((task) => (task.id === editingTask.id ? newTask : task));
     } else {
-      updatedTasks = [newTask, ...tasks]
+      updatedTasks = [newTask, ...tasks];
     }
 
-    localStorage.setItem(`tasks_${user.id}`, JSON.stringify(updatedTasks))
-    setTasks(updatedTasks)
-    setShowForm(false)
-    setEditingTask(null)
-  }
+    localStorage.setItem(`tasks_${user.id}`, JSON.stringify(updatedTasks));
+    setTasks(updatedTasks);
+    setShowForm(false);
+    setEditingTask(null);
+  };
 
   const updateTaskStatus = (id: string, newStatus: Task["statut"]) => {
     const updatedTasks = tasks.map((task) => {
@@ -136,61 +136,62 @@ const TasksView: React.FC = () => {
           ...task,
           statut: newStatus,
           completed_at: newStatus === "terminee" ? new Date().toISOString() : undefined,
-        }
+        };
       }
-      return task
-    })
+      return task;
+    });
 
-    localStorage.setItem(`tasks_${user?.id}`, JSON.stringify(updatedTasks))
-    setTasks(updatedTasks)
-  }
+    localStorage.setItem(`tasks_${user?.id}`, JSON.stringify(updatedTasks));
+    setTasks(updatedTasks);
+  };
 
   const deleteTask = (id: string) => {
-    if (!confirm("Supprimer cette tâche ?")) return
+    if (!confirm("Supprimer cette tâche ?")) return;
 
-    const updatedTasks = tasks.filter((task) => task.id !== id)
-    localStorage.setItem(`tasks_${user?.id}`, JSON.stringify(updatedTasks))
-    setTasks(updatedTasks)
-  }
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    localStorage.setItem(`tasks_${user?.id}`, JSON.stringify(updatedTasks));
+    setTasks(updatedTasks);
+  };
 
   const getPrioriteColor = (priorite: string) => {
     switch (priorite) {
       case "urgente":
-        return "bg-red-100 text-red-800 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200";
       case "haute":
-        return "bg-orange-100 text-orange-800 border-orange-200"
+        return "bg-orange-100 text-orange-800 border-orange-200";
       case "moyenne":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200"
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
       case "basse":
-        return "bg-green-100 text-green-800 border-green-200"
+        return "bg-green-100 text-green-800 border-green-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
-  }
+  };
 
   const getStatutColor = (statut: string) => {
     switch (statut) {
       case "terminee":
-        return "bg-green-100 text-green-800 border-green-200"
+        return "bg-green-100 text-green-800 border-green-200";
       case "en_cours":
-        return "bg-blue-100 text-blue-800 border-blue-200"
+        return "bg-blue-100 text-blue-800 border-blue-200";
       case "a_faire":
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
-  }
+  };
 
-  const filteredTasks = filter === "toutes" ? tasks : tasks.filter((task) => task.statut === filter)
+  const filteredTasks =
+    filter === "toutes" ? tasks : tasks.filter((task) => task.statut === filter);
 
   const TaskForm = ({
     task,
     onSave,
     onCancel,
   }: {
-    task?: Task
-    onSave: (data: Omit<Task, "id" | "created_at">) => void
-    onCancel: () => void
+    task?: Task;
+    onSave: (data: Omit<Task, "id" | "created_at">) => void;
+    onCancel: () => void;
   }) => {
     const [formData, setFormData] = useState({
       titre: task?.titre || "",
@@ -201,12 +202,12 @@ const TasksView: React.FC = () => {
       date_echeance: task?.date_echeance || "",
       enfant_concerne: task?.enfant_concerne || "",
       completed_at: task?.completed_at,
-    })
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault()
-      onSave(formData)
-    }
+      e.preventDefault();
+      onSave(formData);
+    };
 
     return (
       <motion.div
@@ -350,8 +351,8 @@ const TasksView: React.FC = () => {
           </div>
         </div>
       </motion.div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="p-6 pb-20">
@@ -367,8 +368,8 @@ const TasksView: React.FC = () => {
 
           <button
             onClick={() => {
-              setEditingTask(null)
-              setShowForm(true)
+              setEditingTask(null);
+              setShowForm(true);
             }}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
           >
@@ -502,8 +503,8 @@ const TasksView: React.FC = () => {
                     )}
                     <button
                       onClick={() => {
-                        setEditingTask(task)
-                        setShowForm(true)
+                        setEditingTask(task);
+                        setShowForm(true);
                       }}
                       className="text-blue-500 hover:text-blue-700 p-1"
                     >
@@ -536,14 +537,14 @@ const TasksView: React.FC = () => {
             task={editingTask || undefined}
             onSave={saveTask}
             onCancel={() => {
-              setShowForm(false)
-              setEditingTask(null)
+              setShowForm(false);
+              setEditingTask(null);
             }}
           />
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TasksView
+export default TasksView;

@@ -1,3 +1,3 @@
 export default function Paiement() {
-  return <h1>💳 Paiement</h1>
+  return <h1>💳 Paiement</h1>;
 }

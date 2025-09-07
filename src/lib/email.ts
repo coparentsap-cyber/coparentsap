@@ -1,20 +1,20 @@
-import { supabase } from "./supabase"
+import { supabase } from "./supabase";
 
 interface EmailData {
-  to: string
-  subject: string
-  html: string
-  from?: string
+  to: string;
+  subject: string;
+  html: string;
+  from?: string;
 }
 
 class EmailService {
-  private static instance: EmailService
+  private static instance: EmailService;
 
   static getInstance(): EmailService {
     if (!EmailService.instance) {
-      EmailService.instance = new EmailService()
+      EmailService.instance = new EmailService();
     }
-    return EmailService.instance
+    return EmailService.instance;
   }
 
   // Envoyer email de bienvenue
@@ -75,9 +75,9 @@ class EmailService {
           </div>
         </div>
       `,
-    }
+    };
 
-    return this.sendEmail(emailData)
+    return this.sendEmail(emailData);
   }
 
   // Envoyer invitation co-parent
@@ -145,9 +145,9 @@ class EmailService {
           </div>
         </div>
       `,
-    }
+    };
 
-    return this.sendEmail(emailData)
+    return this.sendEmail(emailData);
   }
 
   // Envoyer email de réinitialisation mot de passe
@@ -185,9 +185,9 @@ class EmailService {
           </div>
         </div>
       `,
-    }
+    };
 
-    return this.sendEmail(emailData)
+    return this.sendEmail(emailData);
   }
 
   // Envoyer notification de changement
@@ -203,7 +203,7 @@ class EmailService {
       photo: "📸",
       message: "💬",
       validation: "✅",
-    }
+    };
 
     const emailData: EmailData = {
       to: toEmail,
@@ -234,9 +234,9 @@ class EmailService {
           </div>
         </div>
       `,
-    }
+    };
 
-    return this.sendEmail(emailData)
+    return this.sendEmail(emailData);
   }
 
   // Fonction générique d'envoi d'email
@@ -248,21 +248,21 @@ class EmailService {
           emailData.subject,
           "vers",
           emailData.to
-        )
-        return { success: true, id: "demo_" + Date.now() }
+        );
+        return { success: true, id: "demo_" + Date.now() };
       }
 
       const { data, error } = await supabase.functions.invoke("send-email", {
         body: emailData,
-      })
+      });
 
-      if (error) throw error
-      return data
+      if (error) throw error;
+      return data;
     } catch (error) {
-      console.error("Erreur envoi email:", error)
+      console.error("Erreur envoi email:", error);
       // En cas d'erreur, ne pas bloquer l'application
-      console.log("📧 Email simulé (erreur service):", emailData.subject, "vers", emailData.to)
-      return { success: true, id: "fallback_" + Date.now() }
+      console.log("📧 Email simulé (erreur service):", emailData.subject, "vers", emailData.to);
+      return { success: true, id: "fallback_" + Date.now() };
     }
   }
 
@@ -270,20 +270,20 @@ class EmailService {
   async testEmailConfiguration() {
     try {
       if (!supabase) {
-        return { success: false, message: "Supabase non configuré" }
+        return { success: false, message: "Supabase non configuré" };
       }
 
       const { data, error } = await supabase.functions.invoke("test-email", {
         body: { test: true },
-      })
+      });
 
-      if (error) throw error
-      return data
+      if (error) throw error;
+      return data;
     } catch (error) {
-      console.error("Erreur test email:", error)
-      return { success: false, message: error.message }
+      console.error("Erreur test email:", error);
+      return { success: false, message: error.message };
     }
   }
 }
 
-export const emailService = EmailService.getInstance()
+export const emailService = EmailService.getInstance();

@@ -1,3 +1,3 @@
 export default function NotificationsView() {
-  return <h1>🔔 Notifications</h1>
+  return <h1>🔔 Notifications</h1>;
 }

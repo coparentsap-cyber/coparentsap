@@ -1,70 +1,70 @@
-import React, { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Users, X, Copy, UserPlus, MessageCircle } from "lucide-react"
-import { useAuth } from "../../contexts/AuthContext"
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Users, X, Copy, UserPlus, MessageCircle } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface CoParentInvite {
-  id: string
-  email: string
-  status: "pending" | "accepted" | "declined"
-  sent_at: string
-  accepted_at?: string
+  id: string;
+  email: string;
+  status: "pending" | "accepted" | "declined";
+  sent_at: string;
+  accepted_at?: string;
 }
 
 interface ConnectedCoParent {
-  id: string
-  name: string
-  email: string
-  connected_at: string
-  last_seen?: string
+  id: string;
+  name: string;
+  email: string;
+  connected_at: string;
+  last_seen?: string;
 }
 
 const CoParentConnection: React.FC = () => {
-  const { user, profile } = useAuth()
-  const [connectedCoParents, setConnectedCoParents] = useState<ConnectedCoParent[]>([])
-  const [pendingInvites, setPendingInvites] = useState<CoParentInvite[]>([])
-  const [showInviteForm, setShowInviteForm] = useState(false)
-  const [inviteEmail, setInviteEmail] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [myInviteCode, setMyInviteCode] = useState("")
+  const { user, profile } = useAuth();
+  const [connectedCoParents, setConnectedCoParents] = useState<ConnectedCoParent[]>([]);
+  const [pendingInvites, setPendingInvites] = useState<CoParentInvite[]>([]);
+  const [showInviteForm, setShowInviteForm] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [myInviteCode, setMyInviteCode] = useState("");
 
   useEffect(() => {
-    loadConnections()
-    generateMyInviteCode()
-  }, [user])
+    loadConnections();
+    generateMyInviteCode();
+  }, [user]);
 
   const loadConnections = () => {
-    if (!user) return
+    if (!user) return;
 
     try {
       // Charger les co-parents connectés
-      const savedConnections = localStorage.getItem(`coparents_${user.id}`)
+      const savedConnections = localStorage.getItem(`coparents_${user.id}`);
       if (savedConnections) {
-        setConnectedCoParents(JSON.parse(savedConnections))
+        setConnectedCoParents(JSON.parse(savedConnections));
       }
 
       // Charger les invitations en attente
-      const savedInvites = localStorage.getItem(`invites_${user.id}`)
+      const savedInvites = localStorage.getItem(`invites_${user.id}`);
       if (savedInvites) {
-        setPendingInvites(JSON.parse(savedInvites))
+        setPendingInvites(JSON.parse(savedInvites));
       }
     } catch (error) {
-      console.error("Erreur lors du chargement des connexions:", error)
+      console.error("Erreur lors du chargement des connexions:", error);
     }
-  }
+  };
 
   const generateMyInviteCode = () => {
-    if (!user) return
+    if (!user) return;
 
     // Générer un code unique basé sur l'ID utilisateur
-    const code = `CP-${user.id.slice(-8).toUpperCase()}`
-    setMyInviteCode(code)
-  }
+    const code = `CP-${user.id.slice(-8).toUpperCase()}`;
+    setMyInviteCode(code);
+  };
 
   const sendInvite = async () => {
-    if (!user || !inviteEmail.trim()) return
+    if (!user || !inviteEmail.trim()) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       // Simuler l'envoi d'invitation
       const newInvite: CoParentInvite = {
@@ -72,11 +72,11 @@ const CoParentConnection: React.FC = () => {
         email: inviteEmail.trim(),
         status: "pending",
         sent_at: new Date().toISOString(),
-      }
+      };
 
-      const updatedInvites = [...pendingInvites, newInvite]
-      localStorage.setItem(`invites_${user.id}`, JSON.stringify(updatedInvites))
-      setPendingInvites(updatedInvites)
+      const updatedInvites = [...pendingInvites, newInvite];
+      localStorage.setItem(`invites_${user.id}`, JSON.stringify(updatedInvites));
+      setPendingInvites(updatedInvites);
 
       // Simuler l'envoi d'email
       alert(
@@ -85,16 +85,16 @@ const CoParentConnection: React.FC = () => {
           `• Lien pour télécharger l'app\n` +
           `• Votre code de connexion : ${myInviteCode}\n` +
           `• Instructions pour se connecter`
-      )
+      );
 
-      setInviteEmail("")
-      setShowInviteForm(false)
+      setInviteEmail("");
+      setShowInviteForm(false);
     } catch (error) {
-      console.error("Erreur lors de l'envoi:", error)
+      console.error("Erreur lors de l'envoi:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const acceptInvite = (inviteCode: string) => {
     // Simuler l'acceptation d'une invitation
@@ -103,27 +103,27 @@ const CoParentConnection: React.FC = () => {
       name: "Co-Parent",
       email: "coparent@example.com",
       connected_at: new Date().toISOString(),
-    }
+    };
 
-    const updatedConnections = [...connectedCoParents, newConnection]
-    localStorage.setItem(`coparents_${user?.id}`, JSON.stringify(updatedConnections))
-    setConnectedCoParents(updatedConnections)
+    const updatedConnections = [...connectedCoParents, newConnection];
+    localStorage.setItem(`coparents_${user?.id}`, JSON.stringify(updatedConnections));
+    setConnectedCoParents(updatedConnections);
 
-    alert("🎉 Co-parent connecté avec succès !")
-  }
+    alert("🎉 Co-parent connecté avec succès !");
+  };
 
   const copyInviteCode = () => {
-    navigator.clipboard.writeText(myInviteCode)
-    alert("📋 Code copié ! Partagez-le avec votre co-parent.")
-  }
+    navigator.clipboard.writeText(myInviteCode);
+    alert("📋 Code copié ! Partagez-le avec votre co-parent.");
+  };
 
   const disconnectCoParent = (id: string) => {
-    if (!confirm("Déconnecter ce co-parent ?")) return
+    if (!confirm("Déconnecter ce co-parent ?")) return;
 
-    const updatedConnections = connectedCoParents.filter((cp) => cp.id !== id)
-    localStorage.setItem(`coparents_${user?.id}`, JSON.stringify(updatedConnections))
-    setConnectedCoParents(updatedConnections)
-  }
+    const updatedConnections = connectedCoParents.filter((cp) => cp.id !== id);
+    localStorage.setItem(`coparents_${user?.id}`, JSON.stringify(updatedConnections));
+    setConnectedCoParents(updatedConnections);
+  };
 
   return (
     <div className="p-6 pb-20">
@@ -373,7 +373,7 @@ const CoParentConnection: React.FC = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CoParentConnection
+export default CoParentConnection;

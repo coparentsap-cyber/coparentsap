@@ -1,7 +1,7 @@
-import { useAuth } from "../../contexts/AuthContext"
-import { useNavigate } from "react-router-dom"
-import { useTheme } from "../../contexts/ThemeContext"
-import { useState, useEffect } from "react"
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../contexts/ThemeContext";
+import { useState, useEffect } from "react";
 
 const COLORS = [
   { name: "Bleu", value: "#2563eb" },
@@ -9,24 +9,24 @@ const COLORS = [
   { name: "Violet", value: "#7c3aed" },
   { name: "Rose", value: "#db2777" },
   { name: "Orange", value: "#ea580c" },
-]
+];
 
 export default function SettingsView() {
-  const { signOut } = useAuth()
-  const { theme, toggleTheme } = useTheme()
-  const navigate = useNavigate()
+  const { signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
 
-  const [brandColor, setBrandColor] = useState(localStorage.getItem("brandColor") || "#2563eb")
+  const [brandColor, setBrandColor] = useState(localStorage.getItem("brandColor") || "#2563eb");
 
   useEffect(() => {
-    document.documentElement.style.setProperty("--brand-color", brandColor)
-    localStorage.setItem("brandColor", brandColor)
-  }, [brandColor])
+    document.documentElement.style.setProperty("--brand-color", brandColor);
+    localStorage.setItem("brandColor", brandColor);
+  }, [brandColor]);
 
   async function handleLogout() {
     if (window.confirm("Voulez-vous vraiment vous déconnecter ?")) {
-      await signOut()
-      navigate("/login")
+      await signOut();
+      navigate("/login");
     }
   }
 
@@ -72,5 +72,5 @@ export default function SettingsView() {
         </button>
       </div>
     </div>
-  )
+  );
 }

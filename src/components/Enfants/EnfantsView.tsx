@@ -1,3 +1,3 @@
 export default function EnfantsView() {
-  return <h1>👶 Enfants</h1>
+  return <h1>👶 Enfants</h1>;
 }

@@ -4,6 +4,6 @@ function App() {
       <h1>Co-Parents</h1>
       <p>App démarrée.</p>
     </div>
-  )
+  );
 }
-export default App
+export default App;

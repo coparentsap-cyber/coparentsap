@@ -1,12 +1,12 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom";
 
 interface SidebarProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
 
   const links = [
     { to: "/", label: "Accueil", icon: "🏠" },
@@ -17,7 +17,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { to: "/invitations", label: "Invitations", icon: "✉️" },
     { to: "/paiement", label: "Paiement", icon: "💳" },
     { to: "/settings", label: "Paramètres", icon: "⚙️" },
-  ]
+  ];
 
   return (
     <aside
@@ -44,5 +44,5 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         ))}
       </nav>
     </aside>
-  )
+  );
 }

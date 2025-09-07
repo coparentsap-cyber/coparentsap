@@ -1,8 +1,8 @@
-import { useState } from "react"
-import Sidebar from "./Sidebar"
+import { useState } from "react";
+import Sidebar from "./Sidebar";
 
 export default function MobileHeader() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <header className="lg:hidden bg-white border-b shadow-md p-4 flex justify-between items-center">
@@ -14,5 +14,5 @@ export default function MobileHeader() {
       {/* ✅ Sidebar version mobile */}
       {open && <Sidebar isOpen={open} onClose={() => setOpen(false)} />}
     </header>
-  )
+  );
 }

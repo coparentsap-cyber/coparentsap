@@ -1,10 +1,10 @@
-import { useState } from "react"
-import { Link, useLocation } from "react-router-dom"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function MobileMenu() {
-  const { pathname } = useLocation()
-  const [open, setOpen] = useState(false)
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
 
   const links = [
     { to: "/profil", label: "Profil", icon: "👤" },
@@ -15,7 +15,7 @@ export default function MobileMenu() {
     { to: "/abonnement", label: "Abonnement", icon: "💳" },
     { to: "/parametres", label: "Paramètres", icon: "⚙️" },
     { to: "/aide", label: "Aide/FAQ", icon: "❓" },
-  ]
+  ];
 
   return (
     <header className="lg:hidden bg-white border-b shadow-md p-4 flex justify-between items-center">
@@ -56,5 +56,5 @@ export default function MobileMenu() {
         )}
       </AnimatePresence>
     </header>
-  )
+  );
 }

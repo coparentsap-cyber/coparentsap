@@ -1,7 +1,7 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
 
   const links = [
     { to: "/", label: "Accueil", icon: "🏠" },
@@ -15,7 +15,7 @@ export default function Sidebar() {
     { to: "/depenses", label: "Dépenses", icon: "💶" },
     { to: "/abonnement", label: "Abonnement", icon: "💳" },
     { to: "/settings", label: "Paramètres", icon: "⚙️" },
-  ]
+  ];
 
   return (
     <aside className="w-60 bg-gray-50 dark:bg-gray-900 border-r p-4 hidden lg:flex flex-col">
@@ -40,5 +40,5 @@ export default function Sidebar() {
         ))}
       </nav>
     </aside>
-  )
+  );
 }

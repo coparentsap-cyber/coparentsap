@@ -1,8 +1,8 @@
-import { ReactNode } from "react"
+import { ReactNode } from "react";
 
 interface CardProps {
-  title?: string
-  children: ReactNode
+  title?: string;
+  children: ReactNode;
 }
 
 export default function Card({ title, children }: CardProps) {
@@ -13,5 +13,5 @@ export default function Card({ title, children }: CardProps) {
       )}
       <div className="text-gray-700 dark:text-gray-300">{children}</div>
     </div>
-  )
+  );
 }

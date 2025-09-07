@@ -1,50 +1,50 @@
 // Service de diagnostic approfondi du système d'emails
-import { supabase } from "./supabase"
+import { supabase } from "./supabase";
 
 interface DeepEmailDiagnostic {
-  timestamp: string
+  timestamp: string;
   supabaseAuth: {
-    configured: boolean
-    emailSettings: any
-    triggers: any[]
-    templates: any[]
-    errors: string[]
-  }
+    configured: boolean;
+    emailSettings: any;
+    triggers: any[];
+    templates: any[];
+    errors: string[];
+  };
   resendService: {
-    apiKeyValid: boolean
-    connectivity: boolean
-    rateLimits: any
-    domainStatus: any
-    errors: string[]
-  }
+    apiKeyValid: boolean;
+    connectivity: boolean;
+    rateLimits: any;
+    domainStatus: any;
+    errors: string[];
+  };
   applicationFlow: {
-    signupProcess: any
-    emailTriggers: any
-    errorHandling: any
-    fallbackMechanisms: any
-  }
+    signupProcess: any;
+    emailTriggers: any;
+    errorHandling: any;
+    fallbackMechanisms: any;
+  };
   networkAnalysis: {
-    dnsResolution: boolean
-    httpsConnectivity: boolean
-    firewallIssues: boolean
-    corsConfiguration: boolean
-  }
-  recommendations: string[]
+    dnsResolution: boolean;
+    httpsConnectivity: boolean;
+    firewallIssues: boolean;
+    corsConfiguration: boolean;
+  };
+  recommendations: string[];
 }
 
 class DeepEmailDiagnosticService {
-  private static instance: DeepEmailDiagnosticService
+  private static instance: DeepEmailDiagnosticService;
 
   static getInstance(): DeepEmailDiagnosticService {
     if (!DeepEmailDiagnosticService.instance) {
-      DeepEmailDiagnosticService.instance = new DeepEmailDiagnosticService()
+      DeepEmailDiagnosticService.instance = new DeepEmailDiagnosticService();
     }
-    return DeepEmailDiagnosticService.instance
+    return DeepEmailDiagnosticService.instance;
   }
 
   // Investigation complète du système d'emails
   async runDeepInvestigation(): Promise<DeepEmailDiagnostic> {
-    console.log("🔍 INVESTIGATION APPROFONDIE DU SYSTÈME D'EMAILS...")
+    console.log("🔍 INVESTIGATION APPROFONDIE DU SYSTÈME D'EMAILS...");
 
     const diagnostic: DeepEmailDiagnostic = {
       timestamp: new Date().toISOString(),
@@ -53,12 +53,12 @@ class DeepEmailDiagnosticService {
       applicationFlow: await this.analyzeApplicationFlow(),
       networkAnalysis: await this.analyzeNetworkConnectivity(),
       recommendations: [],
-    }
+    };
 
-    diagnostic.recommendations = this.generateDeepRecommendations(diagnostic)
+    diagnostic.recommendations = this.generateDeepRecommendations(diagnostic);
 
-    this.displayDeepDiagnostic(diagnostic)
-    return diagnostic
+    this.displayDeepDiagnostic(diagnostic);
+    return diagnostic;
   }
 
   // Analyser la configuration Supabase Auth
@@ -69,41 +69,41 @@ class DeepEmailDiagnosticService {
       triggers: [],
       templates: [],
       errors: [],
-    }
+    };
 
     try {
       if (!supabase) {
-        result.errors.push("Supabase non configuré")
-        return result
+        result.errors.push("Supabase non configuré");
+        return result;
       }
 
-      result.configured = true
+      result.configured = true;
 
       // Vérifier les paramètres d'authentification
       try {
-        const { data: authSettings } = await supabase.auth.getSession()
+        const { data: authSettings } = await supabase.auth.getSession();
         result.emailSettings = {
           sessionExists: !!authSettings.session,
           userExists: !!authSettings.session?.user,
           emailConfirmed: authSettings.session?.user?.email_confirmed_at,
-        }
+        };
       } catch (error: any) {
-        result.errors.push(`Auth settings: ${error.message}`)
+        result.errors.push(`Auth settings: ${error.message}`);
       }
 
       // Vérifier les fonctions Edge disponibles
       try {
         const { data: functions, error } = await supabase.functions.invoke("send-simple-email", {
           body: { test: true, dry_run: true },
-        })
+        });
 
         if (error) {
-          result.errors.push(`Edge function error: ${error.message}`)
+          result.errors.push(`Edge function error: ${error.message}`);
         } else {
-          result.triggers.push("send-simple-email function available")
+          result.triggers.push("send-simple-email function available");
         }
       } catch (error: any) {
-        result.errors.push(`Edge function test: ${error.message}`)
+        result.errors.push(`Edge function test: ${error.message}`);
       }
 
       // Vérifier les variables d'environnement
@@ -112,16 +112,16 @@ class DeepEmailDiagnosticService {
           hasResendKey: !!import.meta.env.VITE_RESEND_API_KEY,
           hasSupabaseUrl: !!import.meta.env.VITE_SUPABASE_URL,
           hasSupabaseKey: !!import.meta.env.VITE_SUPABASE_ANON_KEY,
-        }
-        result.emailSettings = { ...result.emailSettings, ...envVars }
+        };
+        result.emailSettings = { ...result.emailSettings, ...envVars };
       } catch (error: any) {
-        result.errors.push(`Environment variables: ${error.message}`)
+        result.errors.push(`Environment variables: ${error.message}`);
       }
     } catch (error: any) {
-      result.errors.push(`General Supabase analysis: ${error.message}`)
+      result.errors.push(`General Supabase analysis: ${error.message}`);
     }
 
-    return result
+    return result;
   }
 
   // Analyser le service Resend en profondeur
@@ -132,14 +132,14 @@ class DeepEmailDiagnosticService {
       rateLimits: {},
       domainStatus: {},
       errors: [],
-    }
+    };
 
     try {
-      const apiKey = import.meta.env.VITE_RESEND_API_KEY || "re_f8qnHXsH_3UYWfjSpHnFXQiSZZGBoVdkD"
+      const apiKey = import.meta.env.VITE_RESEND_API_KEY || "re_f8qnHXsH_3UYWfjSpHnFXQiSZZGBoVdkD";
 
       if (!apiKey || !apiKey.startsWith("re_")) {
-        result.errors.push("Clé API Resend invalide ou manquante")
-        return result
+        result.errors.push("Clé API Resend invalide ou manquante");
+        return result;
       }
 
       // Test de connectivité API
@@ -149,22 +149,22 @@ class DeepEmailDiagnosticService {
             Authorization: `Bearer ${apiKey}`,
             "Content-Type": "application/json",
           },
-        })
+        });
 
-        result.connectivity = response.ok
-        result.apiKeyValid = response.status !== 401
+        result.connectivity = response.ok;
+        result.apiKeyValid = response.status !== 401;
 
         if (response.ok) {
-          const domains = await response.json()
+          const domains = await response.json();
           result.domainStatus = {
             domains: domains.data || [],
             defaultDomain: "resend.dev",
-          }
+          };
         } else {
-          result.errors.push(`API Response: ${response.status} ${response.statusText}`)
+          result.errors.push(`API Response: ${response.status} ${response.statusText}`);
         }
       } catch (error: any) {
-        result.errors.push(`Connectivity test: ${error.message}`)
+        result.errors.push(`Connectivity test: ${error.message}`);
       }
 
       // Vérifier les limites de taux
@@ -182,27 +182,27 @@ class DeepEmailDiagnosticService {
             html: "<p>Test</p>",
             dry_run: true,
           }),
-        })
+        });
 
         const rateLimitHeaders = {
           remaining: response.headers.get("x-ratelimit-remaining"),
           limit: response.headers.get("x-ratelimit-limit"),
           reset: response.headers.get("x-ratelimit-reset"),
-        }
+        };
 
-        result.rateLimits = rateLimitHeaders
+        result.rateLimits = rateLimitHeaders;
 
         if (response.status === 429) {
-          result.errors.push("Rate limit exceeded")
+          result.errors.push("Rate limit exceeded");
         }
       } catch (error: any) {
-        result.errors.push(`Rate limit test: ${error.message}`)
+        result.errors.push(`Rate limit test: ${error.message}`);
       }
     } catch (error: any) {
-      result.errors.push(`General Resend analysis: ${error.message}`)
+      result.errors.push(`General Resend analysis: ${error.message}`);
     }
 
-    return result
+    return result;
   }
 
   // Analyser le flux applicatif
@@ -212,7 +212,7 @@ class DeepEmailDiagnosticService {
       emailTriggers: {},
       errorHandling: {},
       fallbackMechanisms: {},
-    }
+    };
 
     try {
       // Analyser le processus d'inscription
@@ -222,7 +222,7 @@ class DeepEmailDiagnosticService {
         hasProfileCreation: true,
         hasEmailSending: true,
         hasErrorHandling: true,
-      }
+      };
 
       // Analyser les déclencheurs d'emails
       result.emailTriggers = {
@@ -230,7 +230,7 @@ class DeepEmailDiagnosticService {
         onInvite: "sendInviteEmail",
         onPasswordReset: "sendPasswordResetEmail",
         onNotification: "sendChangeNotification",
-      }
+      };
 
       // Analyser la gestion d'erreurs
       result.errorHandling = {
@@ -239,7 +239,7 @@ class DeepEmailDiagnosticService {
         hasUserFeedback: true,
         hasLogging: true,
         hasNonBlockingErrors: true,
-      }
+      };
 
       // Analyser les mécanismes de fallback
       result.fallbackMechanisms = {
@@ -247,12 +247,12 @@ class DeepEmailDiagnosticService {
         hasOfflineMode: true,
         hasRetryLogic: false, // À améliorer
         hasAlternativeNotification: true,
-      }
+      };
     } catch (error: any) {
-      console.error("Erreur analyse flux applicatif:", error)
+      console.error("Erreur analyse flux applicatif:", error);
     }
 
-    return result
+    return result;
   }
 
   // Analyser la connectivité réseau
@@ -262,117 +262,117 @@ class DeepEmailDiagnosticService {
       httpsConnectivity: false,
       firewallIssues: false,
       corsConfiguration: false,
-    }
+    };
 
     try {
       // Test DNS pour Resend
       try {
-        const response = await fetch("https://api.resend.com/health", { method: "HEAD" })
-        result.dnsResolution = true
-        result.httpsConnectivity = response.ok
+        const response = await fetch("https://api.resend.com/health", { method: "HEAD" });
+        result.dnsResolution = true;
+        result.httpsConnectivity = response.ok;
       } catch (error) {
-        result.dnsResolution = false
+        result.dnsResolution = false;
       }
 
       // Test CORS
       try {
         const response = await fetch("https://api.resend.com/domains", {
           method: "OPTIONS",
-        })
-        result.corsConfiguration = response.ok
+        });
+        result.corsConfiguration = response.ok;
       } catch (error) {
-        result.corsConfiguration = false
+        result.corsConfiguration = false;
       }
     } catch (error: any) {
-      console.error("Erreur analyse réseau:", error)
+      console.error("Erreur analyse réseau:", error);
     }
 
-    return result
+    return result;
   }
 
   // Générer des recommandations approfondies
   private generateDeepRecommendations(diagnostic: DeepEmailDiagnostic): string[] {
-    const recommendations = []
+    const recommendations = [];
 
     // Recommandations Supabase
     if (diagnostic.supabaseAuth.errors.length > 0) {
-      recommendations.push("Vérifier la configuration Supabase Auth")
-      recommendations.push("Contrôler les variables d'environnement")
+      recommendations.push("Vérifier la configuration Supabase Auth");
+      recommendations.push("Contrôler les variables d'environnement");
     }
 
     // Recommandations Resend
     if (!diagnostic.resendService.apiKeyValid) {
-      recommendations.push("Renouveler ou vérifier la clé API Resend")
+      recommendations.push("Renouveler ou vérifier la clé API Resend");
     }
 
     if (!diagnostic.resendService.connectivity) {
-      recommendations.push("Vérifier la connectivité réseau vers Resend")
+      recommendations.push("Vérifier la connectivité réseau vers Resend");
     }
 
     if (diagnostic.resendService.rateLimits.remaining === "0") {
-      recommendations.push("Limite de taux atteinte - Attendre ou upgrader le plan")
+      recommendations.push("Limite de taux atteinte - Attendre ou upgrader le plan");
     }
 
     // Recommandations réseau
     if (!diagnostic.networkAnalysis.dnsResolution) {
-      recommendations.push("Problème de résolution DNS - Vérifier la connexion")
+      recommendations.push("Problème de résolution DNS - Vérifier la connexion");
     }
 
     if (!diagnostic.networkAnalysis.corsConfiguration) {
-      recommendations.push("Configuration CORS à vérifier")
+      recommendations.push("Configuration CORS à vérifier");
     }
 
     // Recommandations applicatives
     if (!diagnostic.applicationFlow.fallbackMechanisms.hasRetryLogic) {
-      recommendations.push("Ajouter une logique de retry pour les emails")
+      recommendations.push("Ajouter une logique de retry pour les emails");
     }
 
     if (recommendations.length === 0) {
-      recommendations.push("Système d'emails optimal - Configuration parfaite")
+      recommendations.push("Système d'emails optimal - Configuration parfaite");
     }
 
-    return recommendations
+    return recommendations;
   }
 
   // Afficher le diagnostic approfondi
   private displayDeepDiagnostic(diagnostic: DeepEmailDiagnostic) {
-    console.log("\n📊 DIAGNOSTIC APPROFONDI DU SYSTÈME D'EMAILS\n")
+    console.log("\n📊 DIAGNOSTIC APPROFONDI DU SYSTÈME D'EMAILS\n");
 
-    console.log("🔧 SUPABASE AUTH:")
-    console.log(`   Configuré: ${diagnostic.supabaseAuth.configured ? "✅" : "❌"}`)
-    console.log(`   Erreurs: ${diagnostic.supabaseAuth.errors.length}`)
+    console.log("🔧 SUPABASE AUTH:");
+    console.log(`   Configuré: ${diagnostic.supabaseAuth.configured ? "✅" : "❌"}`);
+    console.log(`   Erreurs: ${diagnostic.supabaseAuth.errors.length}`);
     diagnostic.supabaseAuth.errors.forEach((error) => {
-      console.log(`   - ${error}`)
-    })
+      console.log(`   - ${error}`);
+    });
 
-    console.log("\n📧 SERVICE RESEND:")
-    console.log(`   API Key valide: ${diagnostic.resendService.apiKeyValid ? "✅" : "❌"}`)
-    console.log(`   Connectivité: ${diagnostic.resendService.connectivity ? "✅" : "❌"}`)
-    console.log(`   Rate limit: ${diagnostic.resendService.rateLimits.remaining || "N/A"}`)
+    console.log("\n📧 SERVICE RESEND:");
+    console.log(`   API Key valide: ${diagnostic.resendService.apiKeyValid ? "✅" : "❌"}`);
+    console.log(`   Connectivité: ${diagnostic.resendService.connectivity ? "✅" : "❌"}`);
+    console.log(`   Rate limit: ${diagnostic.resendService.rateLimits.remaining || "N/A"}`);
 
-    console.log("\n🔄 FLUX APPLICATIF:")
+    console.log("\n🔄 FLUX APPLICATIF:");
     console.log(
       `   Processus inscription: ${Object.values(diagnostic.applicationFlow.signupProcess).every(Boolean) ? "✅" : "❌"}`
-    )
+    );
     console.log(
       `   Gestion erreurs: ${Object.values(diagnostic.applicationFlow.errorHandling).every(Boolean) ? "✅" : "❌"}`
-    )
+    );
 
-    console.log("\n🌐 RÉSEAU:")
-    console.log(`   DNS: ${diagnostic.networkAnalysis.dnsResolution ? "✅" : "❌"}`)
-    console.log(`   HTTPS: ${diagnostic.networkAnalysis.httpsConnectivity ? "✅" : "❌"}`)
-    console.log(`   CORS: ${diagnostic.networkAnalysis.corsConfiguration ? "✅" : "❌"}`)
+    console.log("\n🌐 RÉSEAU:");
+    console.log(`   DNS: ${diagnostic.networkAnalysis.dnsResolution ? "✅" : "❌"}`);
+    console.log(`   HTTPS: ${diagnostic.networkAnalysis.httpsConnectivity ? "✅" : "❌"}`);
+    console.log(`   CORS: ${diagnostic.networkAnalysis.corsConfiguration ? "✅" : "❌"}`);
 
-    console.log("\n💡 RECOMMANDATIONS:")
+    console.log("\n💡 RECOMMANDATIONS:");
     diagnostic.recommendations.forEach((rec) => {
-      console.log(`   - ${rec}`)
-    })
+      console.log(`   - ${rec}`);
+    });
 
     // Afficher résumé utilisateur
     const criticalIssues = [
       ...diagnostic.supabaseAuth.errors,
       ...diagnostic.resendService.errors,
-    ].filter((error) => !error.includes("non configuré"))
+    ].filter((error) => !error.includes("non configuré"));
 
     if (criticalIssues.length === 0) {
       alert(
@@ -381,82 +381,82 @@ class DeepEmailDiagnosticService {
           "🔧 Supabase Auth fonctionnel\n" +
           "🌐 Connectivité réseau OK\n" +
           "🚀 Aucun problème critique détecté !"
-      )
+      );
     } else {
       alert(
         "⚠️ PROBLÈMES CRITIQUES DÉTECTÉS !\n\n" +
           `${criticalIssues.length} erreur(s) trouvée(s):\n` +
           `${criticalIssues.slice(0, 3).join("\n")}\n\n` +
           "Vérifiez la console pour le rapport complet."
-      )
+      );
     }
   }
 
   // Test d'envoi manuel avec logs détaillés
   async testManualEmailSending() {
-    console.log("📧 TEST D'ENVOI MANUEL AVEC LOGS DÉTAILLÉS...")
+    console.log("📧 TEST D'ENVOI MANUEL AVEC LOGS DÉTAILLÉS...");
 
-    const testResults = []
+    const testResults = [];
 
     // Test 1: Email de bienvenue
     try {
-      console.log("🧪 Test 1: Email de bienvenue...")
+      console.log("🧪 Test 1: Email de bienvenue...");
       const result = await this.sendTestEmail(
         "welcome",
         "test@example.com",
         "Test User",
         "CP-TEST123"
-      )
-      testResults.push({ type: "welcome", ...result })
-      console.log(`   Résultat: ${result.success ? "✅" : "❌"} ${result.message}`)
+      );
+      testResults.push({ type: "welcome", ...result });
+      console.log(`   Résultat: ${result.success ? "✅" : "❌"} ${result.message}`);
     } catch (error: any) {
-      testResults.push({ type: "welcome", success: false, error: error.message })
-      console.log(`   Erreur: ❌ ${error.message}`)
+      testResults.push({ type: "welcome", success: false, error: error.message });
+      console.log(`   Erreur: ❌ ${error.message}`);
     }
 
     // Test 2: Email d'invitation
     try {
-      console.log("🧪 Test 2: Email d'invitation...")
+      console.log("🧪 Test 2: Email d'invitation...");
       const result = await this.sendTestEmail(
         "invitation",
         "coparent@example.com",
         "Parent Test",
         "CP-TEST456"
-      )
-      testResults.push({ type: "invitation", ...result })
-      console.log(`   Résultat: ${result.success ? "✅" : "❌"} ${result.message}`)
+      );
+      testResults.push({ type: "invitation", ...result });
+      console.log(`   Résultat: ${result.success ? "✅" : "❌"} ${result.message}`);
     } catch (error: any) {
-      testResults.push({ type: "invitation", success: false, error: error.message })
-      console.log(`   Erreur: ❌ ${error.message}`)
+      testResults.push({ type: "invitation", success: false, error: error.message });
+      console.log(`   Erreur: ❌ ${error.message}`);
     }
 
     // Test 3: Email de reset
     try {
-      console.log("🧪 Test 3: Email de reset...")
-      const result = await this.sendTestEmail("reset", "reset@example.com", "Reset User", "")
-      testResults.push({ type: "reset", ...result })
-      console.log(`   Résultat: ${result.success ? "✅" : "❌"} ${result.message}`)
+      console.log("🧪 Test 3: Email de reset...");
+      const result = await this.sendTestEmail("reset", "reset@example.com", "Reset User", "");
+      testResults.push({ type: "reset", ...result });
+      console.log(`   Résultat: ${result.success ? "✅" : "❌"} ${result.message}`);
     } catch (error: any) {
-      testResults.push({ type: "reset", success: false, error: error.message })
-      console.log(`   Erreur: ❌ ${error.message}`)
+      testResults.push({ type: "reset", success: false, error: error.message });
+      console.log(`   Erreur: ❌ ${error.message}`);
     }
 
-    return testResults
+    return testResults;
   }
 
   // Envoyer un email de test avec logs détaillés
   private async sendTestEmail(type: string, email: string, name: string, code: string) {
-    const apiKey = import.meta.env.VITE_RESEND_API_KEY || "re_f8qnHXsH_3UYWfjSpHnFXQiSZZGBoVdkD"
+    const apiKey = import.meta.env.VITE_RESEND_API_KEY || "re_f8qnHXsH_3UYWfjSpHnFXQiSZZGBoVdkD";
 
-    console.log(`📤 Envoi ${type} vers ${email}...`)
-    console.log(`🔑 API Key: ${apiKey.substring(0, 10)}...`)
+    console.log(`📤 Envoi ${type} vers ${email}...`);
+    console.log(`🔑 API Key: ${apiKey.substring(0, 10)}...`);
 
     try {
-      const emailData = this.generateTestEmailData(type, email, name, code)
+      const emailData = this.generateTestEmailData(type, email, name, code);
 
-      console.log(`📝 Sujet: ${emailData.subject}`)
-      console.log(`📧 De: ${emailData.from}`)
-      console.log(`📨 Vers: ${emailData.to}`)
+      console.log(`📝 Sujet: ${emailData.subject}`);
+      console.log(`📧 De: ${emailData.from}`);
+      console.log(`📨 Vers: ${emailData.to}`);
 
       const response = await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -465,33 +465,33 @@ class DeepEmailDiagnosticService {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(emailData),
-      })
+      });
 
-      console.log(`📊 Status: ${response.status} ${response.statusText}`)
-      console.log(`📈 Headers:`, Object.fromEntries(response.headers.entries()))
+      console.log(`📊 Status: ${response.status} ${response.statusText}`);
+      console.log(`📈 Headers:`, Object.fromEntries(response.headers.entries()));
 
       if (!response.ok) {
-        const errorText = await response.text()
-        console.log(`❌ Erreur détaillée:`, errorText)
-        throw new Error(`HTTP ${response.status}: ${errorText}`)
+        const errorText = await response.text();
+        console.log(`❌ Erreur détaillée:`, errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
 
-      const result = await response.json()
-      console.log(`✅ Succès:`, result)
+      const result = await response.json();
+      console.log(`✅ Succès:`, result);
 
       return {
         success: true,
         message: `Email ${type} envoyé avec succès`,
         id: result.id,
         details: result,
-      }
+      };
     } catch (error: any) {
-      console.log(`❌ Erreur complète:`, error)
+      console.log(`❌ Erreur complète:`, error);
       return {
         success: false,
         message: error.message,
         error: error,
-      }
+      };
     }
   }
 
@@ -500,7 +500,7 @@ class DeepEmailDiagnosticService {
     const baseData = {
       from: "Co-Parents <coparentsap@gmail.com>",
       to: [email],
-    }
+    };
 
     switch (type) {
       case "welcome":
@@ -508,21 +508,21 @@ class DeepEmailDiagnosticService {
           ...baseData,
           subject: "🎉 Bienvenue sur Co-Parents !",
           html: this.generateWelcomeHTML(name, code),
-        }
+        };
       case "invitation":
         return {
           ...baseData,
           subject: `${name} vous invite sur Co-Parents 👨‍👩‍👧‍👦`,
           html: this.generateInviteHTML(name, code),
-        }
+        };
       case "reset":
         return {
           ...baseData,
           subject: "🔒 Réinitialisation mot de passe Co-Parents",
           html: this.generateResetHTML(name),
-        }
+        };
       default:
-        throw new Error(`Type d'email non supporté: ${type}`)
+        throw new Error(`Type d'email non supporté: ${type}`);
     }
   }
 
@@ -550,7 +550,7 @@ class DeepEmailDiagnosticService {
         </div>
       </body>
       </html>
-    `
+    `;
   }
 
   private generateInviteHTML(name: string, code: string) {
@@ -576,7 +576,7 @@ class DeepEmailDiagnosticService {
         </div>
       </body>
       </html>
-    `
+    `;
   }
 
   private generateResetHTML(name: string) {
@@ -599,67 +599,67 @@ class DeepEmailDiagnosticService {
         </div>
       </body>
       </html>
-    `
+    `;
   }
 
   // Test de stress du système d'emails
   async runStressTest() {
-    console.log("🔥 TEST DE STRESS DU SYSTÈME D'EMAILS...")
+    console.log("🔥 TEST DE STRESS DU SYSTÈME D'EMAILS...");
 
-    const results = []
+    const results = [];
     const testEmails = [
       "test1@gmail.com",
       "test2@outlook.com",
       "test3@yahoo.fr",
       "test4@hotmail.com",
       "test5@free.fr",
-    ]
+    ];
 
     for (let i = 0; i < testEmails.length; i++) {
-      const email = testEmails[i]
+      const email = testEmails[i];
       try {
-        console.log(`📤 Test ${i + 1}/${testEmails.length}: ${email}`)
+        console.log(`📤 Test ${i + 1}/${testEmails.length}: ${email}`);
 
-        const startTime = Date.now()
+        const startTime = Date.now();
         const result = await this.sendTestEmail(
           "welcome",
           email,
           `Test User ${i + 1}`,
           `CP-TEST${i + 1}`
-        )
-        const endTime = Date.now()
+        );
+        const endTime = Date.now();
 
         results.push({
           email,
           success: result.success,
           duration: endTime - startTime,
           error: result.error,
-        })
+        });
 
-        console.log(`   ⏱️ Durée: ${endTime - startTime}ms`)
-        console.log(`   📊 Résultat: ${result.success ? "✅" : "❌"}`)
+        console.log(`   ⏱️ Durée: ${endTime - startTime}ms`);
+        console.log(`   📊 Résultat: ${result.success ? "✅" : "❌"}`);
 
         // Délai entre envois pour éviter rate limiting
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (error: any) {
         results.push({
           email,
           success: false,
           duration: 0,
           error: error.message,
-        })
-        console.log(`   ❌ Erreur: ${error.message}`)
+        });
+        console.log(`   ❌ Erreur: ${error.message}`);
       }
     }
 
-    const successCount = results.filter((r) => r.success).length
-    const avgDuration = results.reduce((sum, r) => sum + r.duration, 0) / results.length
+    const successCount = results.filter((r) => r.success).length;
+    const avgDuration = results.reduce((sum, r) => sum + r.duration, 0) / results.length;
 
-    console.log(`\n📊 RÉSULTATS STRESS TEST:`)
+    console.log(`\n📊 RÉSULTATS STRESS TEST:`);
     console.log(
       `   Succès: ${successCount}/${results.length} (${Math.round((successCount / results.length) * 100)}%)`
-    )
-    console.log(`   Durée moyenne: ${Math.round(avgDuration)}ms`)
+    );
+    console.log(`   Durée moyenne: ${Math.round(avgDuration)}ms`);
 
     return {
       totalTests: results.length,
@@ -667,36 +667,36 @@ class DeepEmailDiagnosticService {
       successRate: successCount / results.length,
       averageDuration: avgDuration,
       results,
-    }
+    };
   }
 
   // Analyser les logs Supabase
   async analyzeSupabaseLogs() {
-    console.log("📋 ANALYSE DES LOGS SUPABASE...")
+    console.log("📋 ANALYSE DES LOGS SUPABASE...");
 
     try {
       if (!supabase) {
-        console.log("⚠️ Supabase non configuré - Analyse impossible")
-        return { available: false, logs: [] }
+        console.log("⚠️ Supabase non configuré - Analyse impossible");
+        return { available: false, logs: [] };
       }
 
       // Tenter de récupérer les logs via les fonctions Edge
       const { data, error } = await supabase.functions.invoke("get-logs", {
         body: { type: "email", limit: 50 },
-      })
+      });
 
       if (error) {
-        console.log("⚠️ Logs non accessibles:", error.message)
-        return { available: false, error: error.message }
+        console.log("⚠️ Logs non accessibles:", error.message);
+        return { available: false, error: error.message };
       }
 
-      console.log("📊 Logs récupérés:", data)
-      return { available: true, logs: data || [] }
+      console.log("📊 Logs récupérés:", data);
+      return { available: true, logs: data || [] };
     } catch (error: any) {
-      console.log("❌ Erreur analyse logs:", error.message)
-      return { available: false, error: error.message }
+      console.log("❌ Erreur analyse logs:", error.message);
+      return { available: false, error: error.message };
     }
   }
 }
 
-export const deepEmailDiagnosticService = DeepEmailDiagnosticService.getInstance()
+export const deepEmailDiagnosticService = DeepEmailDiagnosticService.getInstance();

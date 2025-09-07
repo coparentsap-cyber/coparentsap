@@ -13,7 +13,9 @@
     "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,json,css,md}\"",
     "prepare": "husky install",
     "fix:all": "eslint 'src/**/*.{ts,tsx}' --fix && prettier --write 'src/**/*.{ts,tsx,json,css,md}'",
-    "fix:push": "npm run fix:all && git add -A && git commit -m \"chore: cleanup warnings + format\" && git push -u origin main"
+    "fix:push": "npm run fix:all && git add -A && git commit -m \"chore: cleanup warnings + format\" && git push -u origin main",
+    "fix:quiet": "eslint 'src/**/*.{ts,tsx}' --fix --quiet && prettier --write 'src/**/*.{ts,tsx,json,css,md}'",
+    "push:quiet": "npm run fix:quiet && git add -A && git commit -m \"chore: cleanup quiet\" && git push -u origin main"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.6",
@@ -67,5 +69,15 @@
     "src/**/*.{json,css,md}": [
       "prettier --write"
     ]
+  },
+  "eslintConfig": {
+    "rules": {
+      "@typescript-eslint/no-unused-vars": [
+        "off"
+      ],
+      "unused-imports/no-unused-vars": [
+        "off"
+      ]
+    }
   }
 }

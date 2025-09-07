@@ -1,30 +1,30 @@
-import { useState } from "react"
+import { useState } from "react";
 
 export default function TestEmailForm() {
-  const [to, setTo] = useState("")
-  const [subject, setSubject] = useState("")
-  const [text, setText] = useState("")
-  const [status, setStatus] = useState<string | null>(null)
+  const [to, setTo] = useState("");
+  const [subject, setSubject] = useState("");
+  const [text, setText] = useState("");
+  const [status, setStatus] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setStatus("Envoi en cours...")
+    e.preventDefault();
+    setStatus("Envoi en cours...");
 
     try {
       const response = await fetch("/.netlify/functions/send-notification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ to, subject, text }),
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
       if (result.success) {
-        setStatus("✅ Email envoyé avec succès !")
+        setStatus("✅ Email envoyé avec succès !");
       } else {
-        setStatus("❌ Erreur: " + result.error)
+        setStatus("❌ Erreur: " + result.error);
       }
     } catch (err: any) {
-      setStatus("❌ Exception: " + err.message)
+      setStatus("❌ Exception: " + err.message);
     }
   }
 
@@ -61,5 +61,5 @@ export default function TestEmailForm() {
       </form>
       {status && <p className="mt-4">{status}</p>}
     </div>
-  )
+  );
 }

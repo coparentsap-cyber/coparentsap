@@ -1,3 +1,3 @@
 export default function Abonnement() {
-  return <h1>💳 Abonnement</h1>
+  return <h1>💳 Abonnement</h1>;
 }

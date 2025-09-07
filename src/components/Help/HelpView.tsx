@@ -1,3 +1,3 @@
 export default function HelpView() {
-  return <h1>❓ Aide / FAQ</h1>
+  return <h1>❓ Aide / FAQ</h1>;
 }

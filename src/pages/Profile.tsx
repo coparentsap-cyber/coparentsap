@@ -1,7 +1,7 @@
-import { useAuth } from "../contexts/AuthContext"
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Profile() {
-  const { profile } = useAuth()
+  const { profile } = useAuth();
 
   // ➡️ Exemple statique comme ta capture
   const enfants = [
@@ -26,7 +26,7 @@ export default function Profile() {
       allergies: "Œufs, Gluten",
       groupe: "B+",
     },
-  ]
+  ];
 
   return (
     <div className="space-y-6 pb-24">
@@ -90,5 +90,5 @@ export default function Profile() {
         </div>
       </section>
     </div>
-  )
+  );
 }

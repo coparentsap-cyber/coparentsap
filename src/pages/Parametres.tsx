@@ -1,3 +1,3 @@
 export default function Parametres() {
-  return <h1>⚙️ Paramètres</h1>
+  return <h1>⚙️ Paramètres</h1>;
 }

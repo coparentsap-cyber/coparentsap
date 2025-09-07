@@ -1,10 +1,10 @@
-import React from "react"
-import { Heart } from "lucide-react"
+import React from "react";
+import { Heart } from "lucide-react";
 
 interface LogoProps {
-  size?: "sm" | "md" | "lg" | "xl"
-  showText?: boolean
-  className?: string
+  size?: "sm" | "md" | "lg" | "xl";
+  showText?: boolean;
+  className?: string;
 }
 
 const Logo: React.FC<LogoProps> = ({ size = "md", showText = true, className = "" }) => {
@@ -13,21 +13,21 @@ const Logo: React.FC<LogoProps> = ({ size = "md", showText = true, className = "
     md: "w-12 h-12",
     lg: "w-16 h-16",
     xl: "w-20 h-20",
-  }
+  };
 
   const textSizeClasses = {
     sm: "text-lg",
     md: "text-xl",
     lg: "text-2xl",
     xl: "text-3xl",
-  }
+  };
 
   const iconSizeClasses = {
     sm: "w-4 h-4",
     md: "w-6 h-6",
     lg: "w-8 h-8",
     xl: "w-10 h-10",
-  }
+  };
 
   return (
     <div className={`flex items-center space-x-3 ${className}`}>
@@ -65,7 +65,7 @@ const Logo: React.FC<LogoProps> = ({ size = "md", showText = true, className = "
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Logo
+export default Logo;

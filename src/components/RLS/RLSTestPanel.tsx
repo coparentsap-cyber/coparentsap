@@ -1,76 +1,76 @@
-import React, { useState } from "react"
-import { motion } from "framer-motion"
-import { Shield, Play, CheckCircle, XCircle, AlertTriangle, RefreshCw } from "lucide-react"
-import { rlsVerificationService } from "../../lib/rls-verification"
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Shield, Play, CheckCircle, XCircle, AlertTriangle, RefreshCw } from "lucide-react";
+import { rlsVerificationService } from "../../lib/rls-verification";
 
 const RLSTestPanel: React.FC = () => {
-  const [isRunning, setIsRunning] = useState(false)
-  const [results, setResults] = useState<any>(null)
-  const [lastTest, setLastTest] = useState<string>("")
+  const [isRunning, setIsRunning] = useState(false);
+  const [results, setResults] = useState<any>(null);
+  const [lastTest, setLastTest] = useState<string>("");
 
   const runVerification = async () => {
-    setIsRunning(true)
-    setLastTest("verification")
+    setIsRunning(true);
+    setLastTest("verification");
     try {
-      console.log("🔍 LANCEMENT VÉRIFICATION RLS APRÈS NETTOYAGE...")
-      const report = await rlsVerificationService.runCompleteVerification()
-      setResults(report)
+      console.log("🔍 LANCEMENT VÉRIFICATION RLS APRÈS NETTOYAGE...");
+      const report = await rlsVerificationService.runCompleteVerification();
+      setResults(report);
 
       // Afficher résumé immédiat
       const policiesCount = Object.values(report.tables).reduce(
         (sum, table) => sum + table.policies.length,
         0
-      )
+      );
       const testsCount = Object.values(report.tables).reduce(
         (sum, table) => sum + table.tests.length,
         0
-      )
+      );
       const successfulTests = Object.values(report.tables).reduce(
         (sum, table) => sum + table.tests.filter((t) => t.success).length,
         0
-      )
+      );
 
-      console.log(`📊 RÉSUMÉ VÉRIFICATION:`)
-      console.log(`   Policies trouvées: ${policiesCount}`)
-      console.log(`   Tests réussis: ${successfulTests}/${testsCount}`)
-      console.log(`   Statut global: ${report.overallStatus}`)
+      console.log(`📊 RÉSUMÉ VÉRIFICATION:`);
+      console.log(`   Policies trouvées: ${policiesCount}`);
+      console.log(`   Tests réussis: ${successfulTests}/${testsCount}`);
+      console.log(`   Statut global: ${report.overallStatus}`);
     } catch (error) {
-      console.error("Erreur vérification RLS:", error)
-      alert("❌ Erreur lors de la vérification RLS\n\nVérifiez la console pour plus de détails")
+      console.error("Erreur vérification RLS:", error);
+      alert("❌ Erreur lors de la vérification RLS\n\nVérifiez la console pour plus de détails");
     } finally {
-      setIsRunning(false)
+      setIsRunning(false);
     }
-  }
+  };
 
   const runFullDiagnostic = async () => {
-    setIsRunning(true)
-    setLastTest("diagnostic")
+    setIsRunning(true);
+    setLastTest("diagnostic");
     try {
-      const diagnostic = await rlsVerificationService.runFullDiagnostic()
-      setResults(diagnostic)
+      const diagnostic = await rlsVerificationService.runFullDiagnostic();
+      setResults(diagnostic);
     } catch (error) {
-      console.error("Erreur diagnostic RLS:", error)
+      console.error("Erreur diagnostic RLS:", error);
     } finally {
-      setIsRunning(false)
+      setIsRunning(false);
     }
-  }
+  };
 
   const testSecurity = async () => {
-    setIsRunning(true)
-    setLastTest("security")
+    setIsRunning(true);
+    setLastTest("security");
     try {
-      const securityTest = await rlsVerificationService.testSecurityIsolation()
+      const securityTest = await rlsVerificationService.testSecurityIsolation();
       alert(
         `🔒 TEST SÉCURITÉ TERMINÉ\n\n` +
           `Résultat: ${securityTest.success ? "✅ Sécurisé" : "❌ Problème détecté"}\n` +
           `Message: ${securityTest.message}`
-      )
+      );
     } catch (error) {
-      console.error("Erreur test sécurité:", error)
+      console.error("Erreur test sécurité:", error);
     } finally {
-      setIsRunning(false)
+      setIsRunning(false);
     }
-  }
+  };
 
   return (
     <div className="p-6">
@@ -252,7 +252,7 @@ const RLSTestPanel: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RLSTestPanel
+export default RLSTestPanel;
