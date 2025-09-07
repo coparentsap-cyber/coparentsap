@@ -17,7 +17,8 @@
     "fix:quiet": "eslint 'src/**/*.{ts,tsx}' --fix --quiet && prettier --write 'src/**/*.{ts,tsx,json,css,md}'",
     "push:quiet": "npm run fix:quiet && git add -A && git commit -m \"chore: cleanup quiet\" && git push -u origin main",
     "deploy": "npm run push:quiet",
-    "deploy:fast": "prettier --write 'src/**/*.{ts,tsx,json,css,md}' && git add -A && git commit -m \"chore: fast deploy\" && git push -u origin main && vite build"
+    "deploy:fast": "prettier --write 'src/**/*.{ts,tsx,json,css,md}' && git add -A && git commit -m \"chore: fast deploy\" && git push -u origin main && vite build",
+    "go": "npm run deploy:fast"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.6",
