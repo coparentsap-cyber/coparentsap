@@ -1,21 +1,21 @@
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint", "react", "react-hooks"],
+  plugins: ["@typescript-eslint", "react", "unused-imports", "react-refresh"],
   extends: [
     "eslint:recommended",
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:react-hooks/recommended",
-    "prettier"
+    "plugin:react/recommended"
   ],
-  settings: {
-    react: {
-      version: "detect"
-    }
-  },
+  ignorePatterns: ["dist/**", ".netlify/**", ".bolt/**"],
   rules: {
-    "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/no-unused-vars": ["warn"]
-  }
-}
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": ["warn", {
+      argsIgnorePattern: "^_",
+      varsIgnorePattern: "^_"
+    }],
+    "@typescript-eslint/no-explicit-any": "off",
+    "react-refresh/only-export-components": "warn"
+  },
+  settings: { react: { version: "detect" } }
+};
