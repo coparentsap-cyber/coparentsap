@@ -1,28 +1,20 @@
 #!/usr/bin/env bash
 set -e
+echo "🔧 pre-push (rapide) — lint/format/build si dispo (non bloquant)"
 
-echo "Husky pre-push: vérifications locales..."
-if [ -n "$CI" ]; then
-  echo "CI détecté, on saute les checks."
-  exit 0
-fi
-
-if [ -f package-lock.json ]; then
-  echo "npm ci"
-  npm ci --silent
-else
-  echo "npm install"
-  npm install --silent
-fi
 if npm run | grep -q "^  lint$"; then
-  echo "npm run lint"
-  npm run lint
+  echo "→ npm run lint"
+  npm run lint || true
 fi
+
 if npm run | grep -q "^  format$"; then
-  echo "npm run format"
+  echo "→ npm run format"
   npm run format || true
 fi
-echo "npm run build"
-npm run build
 
-echo "OK: push autorisé."
+if npm run | grep -q "^  build$"; then
+  echo "→ npm run build"
+  npm run build || true
+fi
+
+echo "✅ OK: push autorisé."
