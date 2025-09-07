@@ -1,11 +1,18 @@
 {
+<<<<<<< HEAD
   "name": "coparentsap",
   "version": "1.0.0",
   "private": true,
+=======
+  "name": "vite-react-typescript-starter",
+  "private": true,
+  "version": "0.0.0",
+>>>>>>> b56f4d0 (chore: setup husky + lint-staged (non blocking))
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+<<<<<<< HEAD
     "preview": "vite preview"
   },
   "dependencies": {
@@ -19,5 +26,65 @@
     "@vitejs/plugin-react": "^4.2.1",
     "typescript": "^5.3.3",
     "vite": "^5.4.2"
+=======
+    "build:android": "vite build && npx cap sync android && npx cap open android",
+    "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\"",
+    "preview": "vite preview",
+    "lint:fix": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --fix",
+    "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,json,css,md}\"",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.2.6",
+    "@stripe/stripe-js": "^7.8.0",
+    "@supabase/supabase-js": "^2.54.0",
+    "@types/react-router-dom": "^5.3.3",
+    "ci-info": "^4.3.0",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.23.12",
+    "lucide-react": "^0.344.0",
+    "netlify-cli": "^17.38.1",
+    "nodemailer": "^7.0.6",
+    "react": "^18.3.1",
+    "react-calendar": "^6.0.0",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.8.2",
+    "stripe": "^18.4.0"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.4.2",
+    "@capacitor/cli": "^7.4.2",
+    "@capacitor/core": "^7.4.2",
+    "@eslint/js": "^9.9.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "postcss": "^8.4.35",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.3.0",
+    "vite": "^5.4.2"
+  },
+  "lint-staged": {
+    "src/**/*.{js,ts,jsx,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "src/**/*.{json,css,md}": [
+      "prettier --write"
+    ]
+>>>>>>> b56f4d0 (chore: setup husky + lint-staged (non blocking))
   }
 }

@@ -1,0 +1,50 @@
+<!-- Icône HD 512x512 pour Google Play Store - CORRIGÉE -->
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGradient" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="50%" style="stop-color:#ec4899"/>
+      <stop offset="100%" style="stop-color:#3b82f6"/>
+    </radialGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.4"/>
+    </filter>
+    <filter id="textShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+  
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGradient)"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="100" cy="100" r="40" fill="white" opacity="0.1"/>
+  <circle cx="412" cy="412" r="60" fill="white" opacity="0.08"/>
+  <circle cx="450" cy="150" r="25" fill="white" opacity="0.12"/>
+  
+  <!-- Main heart logo -->
+  <g transform="translate(256,200)">
+    <path d="M-50,-30 C-70,-30 -90,-10 -90,20 C-90,50 -50,90 0,130 C50,90 90,50 90,20 C90,-10 70,-30 50,-30 C30,-30 15,-15 0,-5 C-15,-15 -30,-30 -50,-30 Z" 
+          fill="white" filter="url(#shadow)"/>
+    <circle cx="0" cy="20" r="18" fill="#8b5cf6"/>
+    <circle cx="0" cy="20" r="8" fill="white" opacity="0.8"/>
+  </g>
+  
+  <!-- App name -->
+  <text x="256" y="350" text-anchor="middle" fill="white" font-size="52" font-weight="bold" 
+        font-family="Arial, sans-serif" filter="url(#textShadow)">
+    Co-Parents
+  </text>
+  
+  <!-- Tagline -->
+  <text x="256" y="390" text-anchor="middle" fill="white" font-size="20" font-weight="normal" 
+        font-family="Arial, sans-serif" opacity="0.95">
+    Familles recomposées
+  </text>
+  
+  <!-- Small decorative hearts -->
+  <g opacity="0.6">
+    <text x="180" y="450" text-anchor="middle" fill="white" font-size="24">💜</text>
+    <text x="332" y="450" text-anchor="middle" fill="white" font-size="24">💙</text>
+  </g>
+</svg>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:pivotX="54"
+        android:pivotY="54">
+        <!-- Heart shape -->
+        <path android:fillColor="#FFFFFF"
+            android:pathData="M54,35 C49,25 39,25 34,35 C29,25 19,25 14,35 C14,45 24,55 34,65 L54,85 L74,65 C84,55 94,45 94,35 C89,25 79,25 74,35 C69,25 59,25 54,35 Z" />
+        <!-- Inner circle -->
+        <circle android:fillColor="#8b5cf6"
+            android:cx="54"
+            android:cy="50"
+            android:r="8" />
+        <!-- Text -->
+        <path android:fillColor="#FFFFFF"
+            android:pathData="M30,95 L30,85 L35,85 L35,95 L40,95 L40,85 L45,85 L45,95 L50,95 L50,85 L55,85 L55,95 L60,95 L60,85 L65,85 L65,95 L70,95 L70,85 L75,85 L75,95 L78,95 L78,85 L30,85 Z"
+            android:strokeWidth="1"
+            android:strokeColor="#FFFFFF" />
+    </group>
+</vector>

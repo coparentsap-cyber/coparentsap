@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Co-Parents</string>
+    <string name="title_activity_main">Co-Parents - Garde partagée</string>
+    <string name="package_name">com.coparents.app</string>
+    <string name="custom_url_scheme">com.coparents.app</string>
+</resources>

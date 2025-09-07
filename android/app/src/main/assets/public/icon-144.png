@@ -1,0 +1,16 @@
+<!-- Icône 144x144 - Version SVG convertie -->
+<svg width="144" height="144" viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg144" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="50%" style="stop-color:#ec4899"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <rect width="144" height="144" rx="32" fill="url(#bg144)"/>
+  <g transform="translate(72,72)">
+    <path d="M-18,-18 C-24,-18 -30,-12 -30,0 C-30,12 -24,18 -18,18 L18,18 C24,18 30,12 30,0 C30,-12 24,-18 18,-18 Z" fill="white"/>
+    <circle cx="0" cy="0" r="6" fill="#8b5cf6"/>
+    <text x="0" y="32" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Co-Parents</text>
+  </g>
+</svg>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:gradientRadius="70%"
+                android:startColor="#8b5cf6"
+                android:centerColor="#ec4899"
+                android:endColor="#3b82f6" />
+        </shape>
+    </item>
+    
+    <!-- Logo centered -->
+    <item android:gravity="center">
+        <layer-list>
+            <!-- Heart shape -->
+            <item android:gravity="center">
+                <shape android:shape="oval">
+                    <solid android:color="#FFFFFF" />
+                    <size android:width="120dp" android:height="120dp" />
+                </shape>
+            </item>
+            
+            <!-- Inner circle -->
+            <item android:gravity="center">
+                <shape android:shape="oval">
+                    <solid android:color="#8b5cf6" />
+                    <size android:width="40dp" android:height="40dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    
+    <!-- App name -->
+    <item android:gravity="center|bottom" android:bottom="120dp">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="#00000000" />
+                    <size android:width="200dp" android:height="40dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</layer-list>

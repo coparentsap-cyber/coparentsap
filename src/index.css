@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ✅ Police globale */
+html,
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: #f9fafb; /* fond clair neutre */
+  color: #374151; /* texte gris foncé */
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ✅ Amélioration des titres */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  color: #1e293b; /* gris très foncé */
+}
+
+/* ✅ Liens cliquables */
+a {
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+a:hover {
+  color: #2563eb; /* bleu principal */
+}
+
+/* ✅ Boutons par défaut */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+:root {
+  --brand-color: #2563eb; /* défaut bleu */
+}
+
+.bg-brand {
+  background-color: var(--brand-color);
+}
+
+.text-brand {
+  color: var(--brand-color);
+}
+
+.border-brand {
+  border-color: var(--brand-color);
+}
