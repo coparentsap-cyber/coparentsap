@@ -1,20 +1,7 @@
 #!/usr/bin/env bash
 set -e
 echo "🔧 pre-push (rapide) — checks non bloquants"
-
-if npm run | grep -q "^  lint$"; then
-  echo "→ npm run lint"
-  npm run lint || true
-fi
-
-if npm run | grep -q "^  format$"; then
-  echo "→ npm run format"
-  npm run format || true
-fi
-
-if npm run | grep -q "^  build$"; then
-  echo "→ npm run build"
-  npm run build || true
-fi
-
+if npm run | grep -q "^  lint$"; then npm run lint || true; fi
+if npm run | grep -q "^  format$"; then npm run format || true; fi
+if npm run | grep -q "^  build$"; then npm run build || true; fi
 echo "✅ OK: push autorisé."
