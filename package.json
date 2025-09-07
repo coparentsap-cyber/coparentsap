@@ -1,38 +1,17 @@
 {
-<<<<<<< HEAD
   "name": "coparentsap",
   "version": "1.0.0",
   "private": true,
-=======
-  "name": "vite-react-typescript-starter",
-  "private": true,
-  "version": "0.0.0",
->>>>>>> b56f4d0 (chore: setup husky + lint-staged (non blocking))
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-<<<<<<< HEAD
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.39.7",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
-  "devDependencies": {
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.3",
-    "@vitejs/plugin-react": "^4.2.1",
-    "typescript": "^5.3.3",
-    "vite": "^5.4.2"
-=======
     "build:android": "vite build && npx cap sync android && npx cap open android",
-    "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\"",
     "preview": "vite preview",
+    "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --fix",
     "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,json,css,md}\"",
-    "prepare": "husky"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.6",
@@ -79,12 +58,11 @@
   },
   "lint-staged": {
     "src/**/*.{js,ts,jsx,tsx}": [
-      "bash -lc 'eslint --fix || true'",
+      "eslint --fix",
       "prettier --write"
     ],
     "src/**/*.{json,css,md}": [
       "prettier --write"
     ]
->>>>>>> b56f4d0 (chore: setup husky + lint-staged (non blocking))
   }
 }
