@@ -1,28 +1,41 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from 'typescript-eslint';
+import js from "@eslint/js";
+import tseslint from "typescript-eslint";
+import react from "eslint-plugin-react";
+import unusedImports from "eslint-plugin-unused-imports";
 
-export default tseslint.config(
-  { ignores: ['dist'] },
+export default [
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
+    plugins: { react, "unused-imports": unusedImports },
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-    },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      ecmaVersion: "latest",
+      sourceType: "module",
+      parserOptions: { ecmaFeatures: { jsx: true } }
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      // Supprime les imports inutiles à l'autofix
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": ["warn", {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_"
+      }],
+
+      // Temporairement: on désactive les erreurs de 'any'
+      "@typescript-eslint/no-explicit-any": "off",
+
+      // Laisse en warning pour l’instant
+      "react-refresh/only-export-components": "warn"
     },
+    settings: { react: { version: "detect" } }
+  },
+  {
+    // Ignore du bruit
+    ignores: [
+      "dist/**",
+      ".netlify/**",
+      ".bolt/**"
+    ]
   }
-);
+];

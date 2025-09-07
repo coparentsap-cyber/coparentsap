@@ -39,3 +39,8 @@ ios/
 .netlify/
 # Vite build
 dist/
+
+# Netlify
+.netlify/
+# Vite build
+dist/
