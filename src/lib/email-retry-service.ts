@@ -1,5 +1,4 @@
 // Service de retry et gestion robuste des emails
-import { supabase } from "./supabase"
 
 interface EmailRetryConfig {
   maxRetries: number

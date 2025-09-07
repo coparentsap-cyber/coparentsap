@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { UserPlus, Check, X, Mail, Copy, Phone, Users, Clock } from "lucide-react"
+import { UserPlus, Check, X, Mail, Copy, Users, Clock } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
-import { simpleEmailService } from "../../lib/email-simple"
 
 const ConnectCoParent: React.FC = () => {
   const { user, profile, connectCoParent } = useAuth()

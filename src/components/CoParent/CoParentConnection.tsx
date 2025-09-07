@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Users, Plus, Mail, Check, X, Copy, UserPlus, MessageCircle } from "lucide-react"
+import { Users, X, Copy, UserPlus, MessageCircle } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
 
 interface CoParentInvite {

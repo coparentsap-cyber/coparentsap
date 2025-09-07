@@ -1,7 +1,6 @@
 // Service d'authentification renforcé avec gestion RLS
 import { supabase } from "./supabase"
 import { simpleEmailService } from "./email-simple"
-import { emailRetryService } from "./email-retry-service"
 
 export interface AuthUser {
   id: string

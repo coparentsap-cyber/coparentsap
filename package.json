@@ -11,7 +11,9 @@
     "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --fix",
     "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,json,css,md}\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "fix:all": "eslint 'src/**/*.{ts,tsx}' --fix && prettier --write 'src/**/*.{ts,tsx,json,css,md}'",
+    "fix:push": "npm run fix:all && git add -A && git commit -m \"chore: cleanup warnings + format\" && git push -u origin main"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.6",

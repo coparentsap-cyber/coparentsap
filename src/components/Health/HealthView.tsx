@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Heart, Plus, Calendar, User, AlertTriangle, Clock, X, Phone, MapPin } from "lucide-react"
-import { format, addDays, isBefore, isToday, isTomorrow } from "date-fns"
+import { Heart, Plus, User, Clock, X, Phone, MapPin } from "lucide-react"
+import { format, isBefore, isToday, isTomorrow } from "date-fns"
 import { fr } from "date-fns/locale"
 import { useAuth } from "../../contexts/AuthContext"
 

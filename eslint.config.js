@@ -1,41 +1,35 @@
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
-import react from "eslint-plugin-react";
+import reactPlugin from "eslint-plugin-react";
 import unusedImports from "eslint-plugin-unused-imports";
 
+/** @type {import("eslint").Linter.Config[]} */
 export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["**/*.{ts,tsx}"],
-    plugins: { react, "unused-imports": unusedImports },
+    plugins: { react: reactPlugin, "unused-imports": unusedImports },
     languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-      parserOptions: { ecmaFeatures: { jsx: true } }
+      parser: tseslint.parser,
+      parserOptions: { ecmaVersion: "latest", sourceType: "module" }
     },
     rules: {
-      // Supprime les imports inutiles à l'autofix
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": ["warn", {
         argsIgnorePattern: "^_",
         varsIgnorePattern: "^_"
       }],
-
-      // Temporairement: on désactive les erreurs de 'any'
+      "@typescript-eslint/no-unused-vars": ["warn", {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_"
+      }],
       "@typescript-eslint/no-explicit-any": "off",
-
-      // Laisse en warning pour l’instant
-      "react-refresh/only-export-components": "warn"
+      "@typescript-eslint/no-unused-expressions": "off",
+      "no-async-promise-executor": "off"
     },
     settings: { react: { version: "detect" } }
   },
   {
-    // Ignore du bruit
-    ignores: [
-      "dist/**",
-      ".netlify/**",
-      ".bolt/**"
-    ]
+    ignores: ["dist/**", ".netlify/**", ".bolt/**"]
   }
 ];

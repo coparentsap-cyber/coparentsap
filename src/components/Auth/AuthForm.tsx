@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
-import { Mail, Lock, User, Eye, EyeOff, Phone, MessageSquare } from "lucide-react"
+import { Mail, Lock, User, Eye, EyeOff } from "lucide-react"
 import Logo from "../UI/Logo"
 import { useAuth } from "../../contexts/AuthContext"
 import { supabase } from "../../lib/supabase"

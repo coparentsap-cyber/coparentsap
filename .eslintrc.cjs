@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint", "react", "unused-imports", "react-refresh"],
+  plugins: ["@typescript-eslint", "react", "unused-imports"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -14,8 +14,7 @@ module.exports = {
       argsIgnorePattern: "^_",
       varsIgnorePattern: "^_"
     }],
-    "@typescript-eslint/no-explicit-any": "off",
-    "react-refresh/only-export-components": "warn"
+    "@typescript-eslint/no-explicit-any": "off"
   },
   settings: { react: { version: "detect" } }
 };

@@ -1,5 +1,5 @@
 import React from "react"
-import { Heart, Users } from "lucide-react"
+import { Heart } from "lucide-react"
 
 interface LogoProps {
   size?: "sm" | "md" | "lg" | "xl"

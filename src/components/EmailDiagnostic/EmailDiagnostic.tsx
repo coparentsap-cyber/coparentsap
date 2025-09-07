@@ -1,18 +1,7 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
-import {
-  Mail,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Play,
-  RefreshCw,
-  Zap,
-  Search,
-  Activity,
-} from "lucide-react"
+import { Mail, CheckCircle, XCircle, Play, RefreshCw, Zap, Search, Activity } from "lucide-react"
 import { emailVerificationService } from "../../lib/email-verification"
-import { simpleEmailService } from "../../lib/email-simple"
 import { deepEmailDiagnosticService } from "../../lib/email-deep-diagnostic"
 
 const EmailDiagnostic: React.FC = () => {

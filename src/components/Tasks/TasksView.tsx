@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { CheckSquare, Plus, X, Calendar, User, Clock, AlertCircle } from "lucide-react"
+import { CheckSquare, Plus, X, Calendar, User } from "lucide-react"
 import { format } from "date-fns"
-import { fr } from "date-fns/locale"
 import { useAuth } from "../../contexts/AuthContext"
 
 interface Task {
