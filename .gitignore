@@ -34,3 +34,8 @@ ios/
 *.log
 .tmp/
 .cache/
+
+# Netlify
+.netlify/
+# Vite build
+dist/
